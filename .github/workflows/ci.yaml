@@ -42,11 +42,11 @@ jobs:
 
       - name: Run TypeScript check (Frontend)
         working-directory: ./apps/frontend
-        run: pnpm run tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Run TypeScript check (Backend)
         working-directory: ./apps/backend
-        run: pnpm run tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Build Next.js app
         working-directory: ./apps/frontend
