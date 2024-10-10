@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: '21.2.0'
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
         run: pnpm install
