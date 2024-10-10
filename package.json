@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test available\" ",
     "prepare": "husky"
   },
   "keywords": [],
@@ -14,13 +14,19 @@
     "@nestjs/cli": "^10.4.5"
   },
   "devDependencies": {
-    "husky": "^9.1.6"
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
   },
   "lint-staged": {
     "*.ts": [
-      "eslint",
-      "tsc --noEmit"
+      "tsc --noEmit",
+      "eslint --fix"
+    ],
+    "*.js": [
+      "eslint --fix"
+    ],
+    "*.css": [
+      "stylelint --fix"
     ]
   }
 }
-
