@@ -24,6 +24,9 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
         run: pnpm install
@@ -55,6 +58,19 @@ jobs:
       - name: Build NestJS app
         working-directory: ./apps/backend
         run: pnpm run build
+
+      # - name: Deploy Frontend to Vercel
+      #   working-directory: ./apps/frontend
+      #   run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+      
+      # - name: Heroku Login
+      #   run: |
+      #     echo "machine api.heroku.com" >> ~/.netrc
+      #     echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
+      #     echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
+
+      # - name: Deploy Backend to Heroku
+      #   run: heroku git:remote -a your-heroku-app && git push heroku master
 
       # # Optional: Run tests after building
       # - name: Run tests (Frontend)
