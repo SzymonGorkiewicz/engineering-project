@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -12,8 +21,14 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(param: string|number): Promise<User> {
+    if (typeof param === 'number') {
+      return await this.userRepository.findOneBy({ id: param });
+    } else if (typeof param === 'string') {
+      return await this.userRepository.findOneBy({ username: param });
+    } 
+    throw new Error('Invalid parameter type. Must be a string (username) or number (id).');
+    
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

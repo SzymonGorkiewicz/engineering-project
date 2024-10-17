@@ -9,12 +9,16 @@ import { DaysModule } from './entities/days/days.module';
 import { ProductsModule } from './entities/products/products.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
-    }),DatabaseModule, ProductsModule, DaysModule, MealsModule, MealProductModule, BodyStatsModule, UsersModule],
+    }),DatabaseModule, JwtModule.register({}), ProductsModule, DaysModule, MealsModule, MealProductModule, BodyStatsModule, UsersModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {provide: APP_GUARD, useClass: AuthGuard}],
 })
 export class AppModule {}
