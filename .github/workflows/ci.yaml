@@ -64,7 +64,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql postgresql-contrib
           sudo service postgresql start
-          sudo -u postgres psql -c "ALTER USER postgres PASSWORD ${{ secrets.DB_PASSWORD }};"
+          PGPASSWORD="${{ secrets.DB_PASSWORD }}"
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD $PGPASSWORD;"
           sudo -u postgres createdb engineering_project 
 
       - name: Create .env file for NestJS
