@@ -1,3 +1,36 @@
+// {
+//   "extends": ["next/core-web-vitals", "next/typescript"]
+// }
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "plugins": [
+    "@typescript-eslint",
+    "no-secrets",
+    "xss",
+    "security"
+  ],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:xss/recommended",
+    "plugin:security/recommended-legacy"
+  ],
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
+    "no-secrets/no-secrets": "error",
+    "xss/no-mixed-html": "warn",
+    "xss/no-location-href-assign": "error",
+    "security/detect-buffer-noassert": "error",
+    "security/detect-child-process": "error",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-new-buffer": "error",
+    "security/detect-non-literal-regexp": "warn",
+    "security/detect-non-literal-require": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  }
 }

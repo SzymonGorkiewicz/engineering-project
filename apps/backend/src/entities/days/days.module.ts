@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { MealsModule } from '../meals/meals.module';
 
 @Module({
-  imports: [forwardRef(()=>UsersModule), forwardRef(()=>MealsModule)],
+  imports: [forwardRef(() => UsersModule), forwardRef(() => MealsModule)],
   controllers: [DaysController],
   providers: [DaysService],
 })

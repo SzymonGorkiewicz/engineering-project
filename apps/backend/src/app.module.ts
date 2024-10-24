@@ -15,10 +15,21 @@ import { AuthGuard } from './auth/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-    }),DatabaseModule, JwtModule.register({}), ProductsModule, DaysModule, MealsModule, MealProductModule, BodyStatsModule, UsersModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    DatabaseModule,
+    JwtModule.register({}),
+    ProductsModule,
+    DaysModule,
+    MealsModule,
+    MealProductModule,
+    BodyStatsModule,
+    UsersModule,
+    AuthModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, {provide: APP_GUARD, useClass: AuthGuard}],
+  providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

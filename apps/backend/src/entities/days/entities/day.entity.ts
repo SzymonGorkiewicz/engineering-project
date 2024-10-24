@@ -1,9 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, Unique, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 import { User } from 'src/entities/users/entities/user.entity';
 import { Meal } from 'src/entities/meals/entities/meal.entity';
 
 @Entity()
-@Unique(['user', 'date'])  
+@Unique(['user', 'date'])
 export class Day {
   @PrimaryGeneratedColumn()
   id: number;

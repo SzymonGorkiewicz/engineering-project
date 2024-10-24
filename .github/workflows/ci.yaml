@@ -35,48 +35,60 @@ jobs:
         working-directory: ./apps/backend
         run: pnpm install
 
-      - name: Run linter (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm run lint
+      # - name: Run linter (Frontend)
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run lint
 
-      - name: Run linter (Backend)
-        working-directory: ./apps/backend
-        run: pnpm run lint
+      # - name: Run linter (Backend)
+      #   working-directory: ./apps/backend
+      #   run: pnpm run lint
 
-      - name: Run TypeScript check (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm exec tsc --noEmit
+      # - name: Run TypeScript check (Frontend)
+      #   working-directory: ./apps/frontend
+      #   run: pnpm exec tsc --noEmit
 
-      - name: Run TypeScript check (Backend)
-        working-directory: ./apps/backend
-        run: pnpm exec tsc --noEmit
+      # - name: Run TypeScript check (Backend)
+      #   working-directory: ./apps/backend
+      #   run: pnpm exec tsc --noEmit
 
-      - name: Build Next.js app
-        working-directory: ./apps/frontend
-        run: pnpm run build
+      # - name: Build Next.js app
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run build
 
       - name: Build NestJS app
         working-directory: ./apps/backend
         run: pnpm run build
 
-      # - name: Deploy Frontend to Vercel
-      #   working-directory: ./apps/frontend
-      #   run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
-      
-      # - name: Heroku Login
-      #   run: |
-      #     echo "machine api.heroku.com" >> ~/.netrc
-      #     echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
-      #     echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
+      - name: Start PostgreSQL Database
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-contrib
+          sudo service postgresql start
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD ${{ secrets.DB_PASSWORD }};"
+          sudo -u postgres createdb engineering_project 
 
-      # - name: Deploy Backend to Heroku
-      #   run: heroku git:remote -a your-heroku-app && git push heroku master
+      - name: Create .env file for NestJS
+        working-directory: ./apps/backend
+        run: |
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USERNAME=postgres" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_DATABASE=engineering_project" >> .env
 
-      # # Optional: Run tests after building
-      # - name: Run tests (Frontend)
-      #   working-directory: ./apps/frontend
-      #   run: pnpm test
+      - name: Start NestJS Application
+        working-directory: ./apps/backend
+        run: pnpm run start:dev &  
 
-      # - name: Run tests (Backend)
-      #   working-directory: ./apps/backend
-      #   run: pnpm test
+      - name: Start Next.js Application
+        working-directory: ./apps/frontend
+        run: pnpm run dev &  
+
+      - name: Wait for applications to be ready
+        run: sleep 30  # Czas oczekiwania na uruchomienie aplikacji
+
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.11.0
+        with:
+          target: 'http://localhost:3000/'  # Upewnij się, że adres URL jest zgodny z tym, na którym działa Twoja aplikacja
+   

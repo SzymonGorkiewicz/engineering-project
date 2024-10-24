@@ -9,13 +9,13 @@ export class User {
   @Column()
   name: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   username: string;
 
   @Column()
   password: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   email: string;
 
   @OneToMany(() => BodyStats, (bodyStats) => bodyStats.user)
@@ -23,6 +23,4 @@ export class User {
 
   @OneToMany(() => Day, (day) => day.user)
   days: Day[];
-  
-
 }

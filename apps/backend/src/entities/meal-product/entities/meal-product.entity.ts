@@ -1,9 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, Unique, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  Unique,
+  JoinColumn,
+} from 'typeorm';
 import { Meal } from 'src/entities/meals/entities/meal.entity';
 import { Product } from 'src/entities/products/entities/product.entity';
 
 @Entity()
-@Unique(['meal', 'product'])  
+@Unique(['meal', 'product'])
 export class MealProduct {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,5 +23,4 @@ export class MealProduct {
 
   @Column({ type: 'float', default: 100 })
   gramature: number;
-
 }

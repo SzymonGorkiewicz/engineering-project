@@ -4,7 +4,7 @@ import { BodyStatsController } from './body-stats.controller';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [forwardRef(()=>UsersModule)],
+  imports: [forwardRef(() => UsersModule)],
   controllers: [BodyStatsController],
   providers: [BodyStatsService],
 })

@@ -4,7 +4,7 @@ import { ProductsController } from './products.controller';
 import { MealsModule } from '../meals/meals.module';
 
 @Module({
-  imports: [forwardRef(()=>MealsModule)],
+  imports: [forwardRef(() => MealsModule)],
   controllers: [ProductsController],
   providers: [ProductsService],
 })
