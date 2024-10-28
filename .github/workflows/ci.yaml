@@ -22,9 +22,11 @@ jobs:
           node-version: '21.2.0'
       
       - name: Set up PostgreSQL service
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           sudo service postgresql start
-          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD ${{ secrets.DB_PASSWORD }};"
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$DB_PASSWORD';"
           sudo -u postgres psql -c "CREATE DATABASE engineering_project;"
 
       - name: Install pnpm
