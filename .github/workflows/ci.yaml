@@ -43,39 +43,29 @@ jobs:
         working-directory: ./apps/backend
         run: pnpm install
 
-      # - name: Run linter (Frontend)
-      #   working-directory: ./apps/frontend
-      #   run: pnpm run lint
+      - name: Run linter (Frontend)
+        working-directory: ./apps/frontend
+        run: pnpm run lint
 
-      # - name: Run linter (Backend)
-      #   working-directory: ./apps/backend
-      #   run: pnpm run lint
+      - name: Run linter (Backend)
+        working-directory: ./apps/backend
+        run: pnpm run lint
 
-      # - name: Run TypeScript check (Frontend)
-      #   working-directory: ./apps/frontend
-      #   run: pnpm exec tsc --noEmit
+      - name: Run TypeScript check (Frontend)
+        working-directory: ./apps/frontend
+        run: pnpm exec tsc --noEmit
 
-      # - name: Run TypeScript check (Backend)
-      #   working-directory: ./apps/backend
-      #   run: pnpm exec tsc --noEmit
+      - name: Run TypeScript check (Backend)
+        working-directory: ./apps/backend
+        run: pnpm exec tsc --noEmit
 
-      # - name: Build Next.js app
-      #   working-directory: ./apps/frontend
-      #   run: pnpm run build
+      - name: Build Next.js app
+        working-directory: ./apps/frontend
+        run: pnpm run build
 
       - name: Build NestJS app
         working-directory: ./apps/backend
         run: pnpm run build
-
-      # - name: Start PostgreSQL Database
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y postgresql postgresql-contrib
-      #     sudo service postgresql start
-      #     PGPASSWORD="${{ secrets.DB_PASSWORD }}"
-      #     sudo -u postgres psql -c "ALTER USER postgres PASSWORD $PGPASSWORD;"
-      #     sudo -u postgres createdb engineering_project 
-      
 
       - name: Create .env file for NestJS
         working-directory: ./apps/backend
@@ -95,10 +85,33 @@ jobs:
         run: pnpm run dev &  
 
       - name: Wait for applications to be ready
-        run: sleep 30  # Czas oczekiwania na uruchomienie aplikacji
+        run: sleep 30  
 
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.11.0
         with:
-          target: 'http://localhost:3000/'  # Upewnij się, że adres URL jest zgodny z tym, na którym działa Twoja aplikacja
+          target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
+      
+      - name: Deploy backend to heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: lifetrack
+        run: |
+          
+          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+          
+          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web ./apps/backend
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+         
+          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+
+      - name: Deploy frontend to vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          pnpm add -g vercel
+          vercel --token=$VERCEL_TOKEN --prod --confirm
+
+
+   
    
