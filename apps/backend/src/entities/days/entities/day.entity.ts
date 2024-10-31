@@ -5,9 +5,11 @@ import {
   Column,
   Unique,
   OneToMany,
+  Repository,
 } from 'typeorm';
 import { User } from 'src/entities/users/entities/user.entity';
 import { Meal } from 'src/entities/meals/entities/meal.entity';
+import { MealType } from 'src/entities/meals/entities/meal.entity';
 
 @Entity()
 @Unique(['user', 'date'])
@@ -33,13 +35,11 @@ export class Day {
   @OneToMany(() => Meal, (meal) => meal.day)
   meals: Meal[];
 
-  async createDefaultMeals(mealRepository: any) {
-    await mealRepository.save([
-      { day: this, meal_type: 'breakfast' },
-      { day: this, meal_type: 'second_breakfast' },
-      { day: this, meal_type: 'lunch' },
-      { day: this, meal_type: 'afternoon_snack' },
-      { day: this, meal_type: 'dinner' },
-    ]);
+  async createDefaultMeals(mealRepository: Repository<Meal>) {
+    const meals = Object.values(MealType).map((type) => ({
+      day: this,
+      meal_type: type,
+    }));
+    await mealRepository.save(meals);
   }
 }

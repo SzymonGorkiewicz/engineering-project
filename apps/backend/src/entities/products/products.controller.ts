@@ -16,8 +16,8 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  create(@Body() productName: string) {
+    return this.productsService.get_or_create_product(productName);
   }
 
   @Get()

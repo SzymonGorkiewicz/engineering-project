@@ -1,1 +1,3 @@
-export class CreateDayDto {}
+export class CreateDayDto {
+    date: Date
+}
