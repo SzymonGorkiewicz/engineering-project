@@ -35,6 +35,13 @@ jobs:
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
+      - name: Run OWASP depdendency check
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
+          unzip dependency-check-5.4.0-release.zip
+          cd dependency-check-5.4.0
+          ./bin/dependency-check.sh --project "engineering-project" --scan ../apps/frontend --scan ../apps/backend --out ../dependency-check-reports --format ALL
+
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
         run: pnpm install
