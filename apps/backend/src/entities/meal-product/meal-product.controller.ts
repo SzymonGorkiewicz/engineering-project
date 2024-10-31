@@ -21,8 +21,8 @@ export class MealProductController {
   }
 
   @Get()
-  findAll() {
-    return this.mealProductService.findAll();
+  findAll(@Body() body: {mealID:number}) {
+    return this.mealProductService.findAll(body.mealID);
   }
 
   @Get(':id')

@@ -15,28 +15,14 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post()
-  create(@Body() productName: string) {
-    return this.productsService.get_or_create_product(productName);
+  @Post('add')
+  create(@Body() body: {mealID:number, productName:string}) {
+    return this.productsService.addProductToMeal(body.mealID, body.productName);
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  findOne(@Body() body: {productName:string}) {
+    
+    return this.productsService.findOne(body.productName);
   }
 }

@@ -3,9 +3,11 @@ import { MealProductService } from './meal-product.service';
 import { MealProductController } from './meal-product.controller';
 import { MealsModule } from '../meals/meals.module';
 import { ProductsModule } from '../products/products.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MealProduct } from './entities/meal-product.entity';
 
 @Module({
-  imports: [MealsModule, ProductsModule],
+  imports: [MealsModule, ProductsModule, TypeOrmModule.forFeature([MealProduct])],
   controllers: [MealProductController],
   providers: [MealProductService],
 })
