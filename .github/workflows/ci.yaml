@@ -44,11 +44,16 @@ jobs:
           cd dependency-check
           ./bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ../apps/frontend \
-          --scan ../apps/backend \
+          --scan . \
           --out ../dependency-check-reports \
           --format ALL \
           --nvdApiKey $NVD_KEY
+          
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-reports
 
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
