@@ -36,11 +36,19 @@ jobs:
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Run OWASP depdendency check
+        env:
+          NVD_KEY: ${{ secrets.NVD_KEY }}
         run: |
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
           unzip dependency-check-10.0.2-release.zip
           cd dependency-check
-          ./bin/dependency-check.sh --project "engineering-project" --scan ../apps/frontend --scan ../apps/backend --out ../dependency-check-reports --format ALL
+          ./bin/dependency-check.sh \
+          --project "engineering-project" \
+          --scan ../apps/frontend \
+          --scan ../apps/backend \
+          --out ../dependency-check-reports \
+          --format ALL \
+          --nvdApiKey $NVD_KEY
 
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
