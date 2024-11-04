@@ -54,8 +54,7 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ./apps/backend/node_modules \
-          --scan ./apps/frontend/node_modules \
+          --scan pnpm-lock.yaml
           --out ./dependency-check-reports \
           --format HTML \
           --nvdApiKey $NVD_KEY
