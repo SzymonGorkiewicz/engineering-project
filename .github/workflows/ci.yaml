@@ -44,8 +44,7 @@ jobs:
           cd dependency-check
           ./bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ../apps/backend/package.json \
-          --scan ../apps/frontend/package.json \
+          --scan ../pnpm-lock.yaml \
           --out ../dependency-check-reports \
           --format ALL \
           --nvdApiKey $NVD_KEY
