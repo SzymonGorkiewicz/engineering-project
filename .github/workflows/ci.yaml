@@ -35,9 +35,15 @@ jobs:
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
-      # - name: Pnpm audit dependency check
-      #   run: pnpm audit --audit-level=low --json
+      - name: Set up OWASP Dependency Check cache
+        id: owasp-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependency-check
+          key: owasp-nvd-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Run OWASP dependency check
+        if: steps.owasp-cache.outputs.cache-hit != 'true'
         env:
           NVD_KEY: ${{ secrets.NVD_KEY }}
         run: |
@@ -45,9 +51,9 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan pnpm-lock.yaml \
-          --out ../dependency-check-reports \
-          --format ALL \
+          --scan ./pnpm-lock.yaml \
+          --out ./dependency-check-reports \
+          --format HTML \
           --nvdApiKey $NVD_KEY
           
       - name: Upload Dependency Check Report
