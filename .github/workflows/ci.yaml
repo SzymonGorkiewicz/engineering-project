@@ -37,7 +37,7 @@ jobs:
 
       - name: Run OWASP dependency check
         env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+          NVD_API_KEY: ${{ secrets.NVD_KEY }}
         run: |
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
           unzip dependency-check-10.0.2-release.zip
@@ -47,7 +47,7 @@ jobs:
           --scan ./pnpm-lock.yaml \
           --out ../dependency-check-reports \
           --format ALL \
-          --nvdApiKey $NVD_API_KEY
+          --nvdApiKey $NVD_KEY
           
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v3
