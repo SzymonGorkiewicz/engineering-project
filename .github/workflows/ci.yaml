@@ -47,10 +47,12 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ./apps/frontend/package.json ./apps/backend/package.json \
+          --scan ./apps/frontend/package.json \
+          --scan ./apps/backend/package.json \
           --out ./dependency-check-reports \
           --format HTML \
           --nvdApiKey $NVD_KEY
+          --nvdDatafeed NVD_MODIFIED
           
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v3
