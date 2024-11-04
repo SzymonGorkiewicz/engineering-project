@@ -38,13 +38,6 @@ jobs:
       - name: Install dependencies 
         run: pnpm install
 
-      - name: Set up OWASP Dependency Check cache
-        id: owasp-cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.dependency-check
-          key: owasp-nvd-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
       - name: Run OWASP dependency check
         if: steps.owasp-cache.outputs.cache-hit != 'true'
         env:
@@ -54,7 +47,7 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ./apps/frontend/node_modules ./apps/backend/node_modules \
+          --scan ./apps/frontend/package.json ./apps/backend/package.json \
           --out ./dependency-check-reports \
           --format HTML \
           --nvdApiKey $NVD_KEY
