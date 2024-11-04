@@ -38,6 +38,14 @@ jobs:
       - name: Install dependencies 
         run: pnpm install
 
+      - name: Generate package-lock.json for Backend
+        working-directory: ./apps/backend
+        run: npm i --package-lock-only
+
+      - name: Generate package-lock.json for Frontend
+        working-directory: ./apps/frontend
+        run: npm i --package-lock-only
+        
       - name: Run OWASP dependency check
         if: steps.owasp-cache.outputs.cache-hit != 'true'
         env:
@@ -47,12 +55,11 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ./apps/frontend/package.json \
-          --scan ./apps/backend/package.json \
+          --scan ./apps/frontend/package-lock.json \
+          --scan ./apps/backend/package-lock.json \
           --out ./dependency-check-reports \
           --format HTML \
           --nvdApiKey $NVD_KEY
-          --nvdDatafeed NVD_MODIFIED
           
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v3
