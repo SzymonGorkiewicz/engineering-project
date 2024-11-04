@@ -35,6 +35,9 @@ jobs:
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
+      - name: Install dependencies 
+        run: pnpm install
+
       - name: Set up OWASP Dependency Check cache
         id: owasp-cache
         uses: actions/cache@v3
@@ -51,7 +54,8 @@ jobs:
           unzip dependency-check-10.0.2-release.zip
           ./dependency-check/bin/dependency-check.sh \
           --project "engineering-project" \
-          --scan ./pnpm-lock.yaml \
+          --scan ./apps/backend/node_modules \
+          --scan ./apps/frontend/node_modules \
           --out ./dependency-check-reports \
           --format HTML \
           --nvdApiKey $NVD_KEY
@@ -61,14 +65,6 @@ jobs:
         with:
           name: dependency-check-report
           path: dependency-check-reports  
-
-      - name: Install dependencies (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm install
-
-      - name: Install dependencies (Backend)
-        working-directory: ./apps/backend
-        run: pnpm install
 
       - name: Run linter (Frontend)
         working-directory: ./apps/frontend
