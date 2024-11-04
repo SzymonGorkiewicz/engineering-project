@@ -47,7 +47,13 @@ jobs:
           --scan ./pnpm-lock.yaml \
           --out ../dependency-check-reports \
           --format ALL \
-          --nvdApiKey $NVD_API_KEY  
+          --nvdApiKey $NVD_API_KEY
+          
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-reports  
 
       - name: Install dependencies (Frontend)
         working-directory: ./apps/frontend
