@@ -1,5 +1,4 @@
 import { CreateUserDto } from 'src/entities/users/dto/create-user.dto';
-import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import {
   Body,
@@ -10,31 +9,33 @@ import {
   UseGuards,
   Get,
   Request,
+  Res,
+  UnauthorizedException
 } from '@nestjs/common';
-import { Public } from './public-routes';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, string>) {
-    // tutaj dodac DTO forme albo zostawić tak
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  async signIn(@Body() signInDto: { username:string, password:string }, @Res({passthrough: true}) response: Response) {
+    return this.authService.signIn(signInDto.username, signInDto.password, response);
   }
 
-  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('register')
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
+  @Get('check-auth')
   getProfile(@Request() req) {
+    console.log('wchodzi do check-auth')
+    if (!req.user) {
+        throw new UnauthorizedException('User not authenticated');
+    }
     return req.user;
   }
 }

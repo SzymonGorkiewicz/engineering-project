@@ -10,6 +10,7 @@ import { User } from 'src/entities/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -22,14 +23,24 @@ export class AuthService {
   async signIn(
     username: string,
     pass: string,
-  ): Promise<{ access_token: string }> {
+    response: Response
+  ): Promise<{message:string}> {
+    
     const user = await this.usersService.findOne(username);
-    if (!(await bcrypt.compare(pass, user.password))) {
+    if (!user|| !(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException('Invalid Credentials');
     }
-    const payload = { sub: user.id, username: user.username };
 
-    return { access_token: await this.jwtService.signAsync(payload) };
+    const payload = { sub: user.id, username: user.username };
+    const token = await this.jwtService.signAsync(payload);
+    console.log(token)
+    response.cookie('access_token', token, {
+      httpOnly: true,
+      maxAge: 60*60*1000,
+      sameSite: 'strict'
+    })
+
+    return { message: 'Logged in succesfully' };
   }
 
   async signUp(signUpDto: CreateUserDto): Promise<User> {

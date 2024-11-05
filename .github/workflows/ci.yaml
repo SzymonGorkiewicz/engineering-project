@@ -37,14 +37,6 @@ jobs:
 
       - name: Install dependencies 
         run: pnpm install
-
-      # - name: Generate package-lock.json for Backend
-      #   working-directory: ./apps/backend
-      #   run: npm i --package-lock-only
-
-      # - name: Generate package-lock.json for Frontend
-      #   working-directory: ./apps/frontend
-      #   run: npm i --package-lock-only
         
       - name: Run OWASP dependency check
         if: steps.owasp-cache.outputs.cache-hit != 'true'

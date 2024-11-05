@@ -7,14 +7,12 @@ import {
   Param,
   Delete,
   Request,
-  UseGuards
 } from '@nestjs/common';
 import { DaysService } from './days.service';
 import { CreateDayDto } from './dto/create-day.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 
-@UseGuards(AuthGuard)
+
 @Controller('days')
 export class DaysController {
   constructor(private readonly daysService: DaysService) {}

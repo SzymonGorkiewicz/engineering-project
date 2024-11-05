@@ -13,18 +13,31 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const RegisterPage: React.FC = () => {
+  const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
+    try{
+      const response = await axios.post(`${backendURL}auth/register`,{
+        username: username,
+        password: password,
+        name: name,
+        email: email
+      })
+      if (response.status === 200){
+        router.push('/login')
+      }
+    }catch(error){
+      console.error("Error while creating user", error)
+    }
   };
 
   return (

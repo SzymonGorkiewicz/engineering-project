@@ -13,16 +13,30 @@ import {
 } from '@mui/material';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const LoginPage: React.FC = () => {
+  const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const router = useRouter();
-  const [username, setUsername] = useState<string | null>(null);
-  const [password, setPassword] = useState<string| null>(null);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
+    try{
+      const response = await axios.post(`${backendURL}auth/login`,{
+        username: username,
+        password: password
+      },{
+        withCredentials:true
+      })
+      if (response.status===200){
+        router.push('/homepage')
+      }
+    }catch(error){
+      console.error('Error while logging in ', error)
+    }
+   
   };
 
   return (
