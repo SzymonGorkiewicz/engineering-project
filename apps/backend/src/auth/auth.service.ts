@@ -36,7 +36,7 @@ export class AuthService {
     console.log(token)
     response.cookie('access_token', token, {
       httpOnly: true,
-      maxAge: 60*60*1000,
+      maxAge: 60 * 60 * 1000,
       sameSite: 'strict'
     })
 

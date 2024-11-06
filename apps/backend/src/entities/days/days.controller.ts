@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   Request,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { DaysService } from './days.service';
 import { CreateDayDto } from './dto/create-day.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
+
 
 
 @Controller('days')
@@ -23,8 +26,9 @@ export class DaysController {
   }
 
   @Get()
-  findAll() {
-    return this.daysService.findAll();
+  findAll(@Query('range') range:string, @Request() request) {
+    const rangeInt = parseInt(range, 10) || 7;
+    return this.daysService.findInRange(rangeInt, request.user.sub);
   }
 
   @Get(':id')

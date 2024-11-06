@@ -3,8 +3,10 @@ import { CreateDayDto } from './dto/create-day.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Day } from './entities/day.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Meal } from '../meals/entities/meal.entity';
+
+
 
 @Injectable()
 export class DaysService {
@@ -23,8 +25,23 @@ export class DaysService {
     throw new UnauthorizedException('User not found or not authenticated.');
   }
 
-  findAll() {
-    return `This action returns all days`;
+  async findInRange(range: number, userID:number):Promise<Day[]> {
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - range);
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + range);
+    
+
+    return this.dayRepository.find({
+      where: {
+        user: {id:userID},
+        date: Between(startDate,endDate)
+          
+      },
+      order: { date: 'ASC' },
+    });
+
   }
 
   findOne(id: number) {

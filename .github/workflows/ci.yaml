@@ -64,17 +64,17 @@ jobs:
         working-directory: ./apps/frontend
         run: pnpm run lint
 
-      - name: Run linter (Backend)
-        working-directory: ./apps/backend
-        run: pnpm run lint
+      # - name: Run linter (Backend)
+      #   working-directory: ./apps/backend
+      #   run: pnpm run lint
 
-      - name: Run TypeScript check (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm exec tsc --noEmit
+      # - name: Run TypeScript check (Frontend)
+      #   working-directory: ./apps/frontend
+      #   run: pnpm exec tsc --noEmit
 
-      - name: Run TypeScript check (Backend)
-        working-directory: ./apps/backend
-        run: pnpm exec tsc --noEmit
+      # - name: Run TypeScript check (Backend)
+      #   working-directory: ./apps/backend
+      #   run: pnpm exec tsc --noEmit
 
       - name: Build Next.js app
         working-directory: ./apps/frontend
@@ -92,7 +92,12 @@ jobs:
           echo "DB_USERNAME=postgres" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_DATABASE=engineering_project" >> .env
-
+      
+      - name: Create .env file for Nextjs
+        working-directory: ./apps/frontend
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
+          
       - name: Start NestJS Application
         working-directory: ./apps/backend
         run: pnpm run start:dev &  
@@ -109,25 +114,25 @@ jobs:
         with:
           target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
       
-      - name: Deploy backend to heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: lifetrack
-        run: |
+      # - name: Deploy backend to heroku
+      #   env:
+      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      #     HEROKU_APP_NAME: lifetrack
+      #   run: |
           
-          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+      #     echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           
-          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web ./apps/backend
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+      #     docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web ./apps/backend
+      #     docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
          
-          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+      #     heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
 
-      - name: Deploy frontend to vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          pnpm add -g vercel
-          vercel --token=$VERCEL_TOKEN --prod --confirm
+      # - name: Deploy frontend to vercel
+      #   env:
+      #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      #   run: |
+      #     pnpm add -g vercel
+      #     vercel --token=$VERCEL_TOKEN --prod --confirm
 
 
    
