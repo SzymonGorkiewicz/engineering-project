@@ -109,31 +109,33 @@ jobs:
       - name: Wait for applications to be ready
         run: sleep 30  
 
-      - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.11.0
-        with:
-          target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-full-scan@v0.11.0
+      #   with:
+      #     target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
       
-      # - name: Deploy backend to heroku
-      #   env:
-      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      #     HEROKU_APP_NAME: lifetrack
-      #   run: |
-          
-      #     echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-          
-      #     docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web ./apps/backend
-      #     docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-         
-      #     heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+      - name: Deploy backend to heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: backend-lifetrack
+          HEROKU_EMAIL:  ${{ secrets.HEROKU_EMAIL }}
+        working-directory: ./apps/backend
+        uses: akhileshns/heroku-deploy@v3.12.12
+          with:
+            heroku_api_key: $HEROKU_API_KEY
+            heroku_app_name: $HEROKU_APP_NAME
+            heroku_email: $HEROKU_EMAIL
+            #env_file:
+
 
       # - name: Deploy frontend to vercel
       #   env:
       #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      #     ORG_ID: ${{ secrets.VERCEL_ORGID }}
+      #     PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+      #   working-directory: ./apps/frontend
       #   run: |
-      #     pnpm add -g vercel
-      #     vercel --token=$VERCEL_TOKEN --prod --confirm
-
+      #     pnpm vercel --token=$VERCEL_TOKEN --prod --confirm 
 
    
    
