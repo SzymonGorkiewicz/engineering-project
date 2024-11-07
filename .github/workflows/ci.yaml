@@ -121,11 +121,11 @@ jobs:
           HEROKU_EMAIL:  ${{ secrets.HEROKU_EMAIL }}
         working-directory: ./apps/backend
         uses: akhileshns/heroku-deploy@v3.12.12
-          with:
-            heroku_api_key: $HEROKU_API_KEY
-            heroku_app_name: $HEROKU_APP_NAME
-            heroku_email: $HEROKU_EMAIL
-            #env_file:
+        with:
+          heroku_api_key: $HEROKU_API_KEY
+          heroku_app_name: $HEROKU_APP_NAME
+          heroku_email: $HEROKU_EMAIL
+          #env_file:
 
 
       # - name: Deploy frontend to vercel
