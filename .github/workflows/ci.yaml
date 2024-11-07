@@ -114,17 +114,12 @@ jobs:
       #   with:
       #     target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
       
-      - name: Deploy backend to heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: backend-lifetrack
-          HEROKU_EMAIL:  ${{ secrets.HEROKU_EMAIL }}
-        working-directory: ./apps/backend
+      - name: Deploy backend to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: $HEROKU_API_KEY
-          heroku_app_name: $HEROKU_APP_NAME
-          heroku_email: $HEROKU_EMAIL
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: backend-lifetrack
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
           #env_file:
 
 
