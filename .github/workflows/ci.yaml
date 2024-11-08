@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-test-locally:
     runs-on: ubuntu-latest
 
     steps:
@@ -106,14 +106,22 @@ jobs:
         working-directory: ./apps/frontend
         run: pnpm run dev &  
 
-      - name: Wait for applications to be ready
-        run: sleep 30  
+      # - name: Wait for applications to be ready
+      #   run: sleep 30  
 
       # - name: ZAP Scan
       #   uses: zaproxy/action-full-scan@v0.11.0
       #   with:
       #     target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
       
+  deploy-backend:
+    needs: build-and-test-locally
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy backend to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
@@ -123,19 +131,38 @@ jobs:
           appdir: "./apps/backend"
           healthcheck: "https://backend-lifetrack.herokuapp.com/health"
           delay: 5
-          #env_file: ".heroku-env"
-          procfile: "web: npm run start:prod"
-          
+          #procfile: "web: npm run start:prod"
+        env:
+          POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: ${{ secrets.HEROKU_POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.HEROKU_POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          FRONTEND_URL: ${{ secrets.HEROKU_EMAIL }}
+  
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # - name: Deploy frontend to vercel
-      #   env:
-      #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      #     ORG_ID: ${{ secrets.VERCEL_ORGID }}
-      #     PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
-      #   working-directory: ./apps/frontend
-      #   run: |
-      #     pnpm vercel --token=$VERCEL_TOKEN --prod --confirm 
+      - name: Create .env file for Nextjs
+        working-directory: ./apps/frontend
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.HEROKU_BACKEND_URL }}" >> .env.local
+      
+      - name: Deploy frontend to vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          ORG_ID: ${{ secrets.VERCEL_ORGID }}
+          PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+        working-directory: ./apps/frontend
+        run: |
+          pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
+      
 
    
    
