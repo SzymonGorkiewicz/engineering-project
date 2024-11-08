@@ -41,6 +41,7 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+.heroku-env
 
 # Husky
 .husky/_

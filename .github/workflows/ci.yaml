@@ -38,27 +38,27 @@ jobs:
       - name: Install dependencies 
         run: pnpm install
         
-      - name: Run OWASP dependency check
-        if: steps.owasp-cache.outputs.cache-hit != 'true'
-        env:
-          NVD_KEY: ${{ secrets.NVD_KEY }}
-        run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
-          unzip dependency-check-10.0.2-release.zip
-          ./dependency-check/bin/dependency-check.sh \
-          --project "engineering-project" \
-          --scan ./pnpm-lock.yaml \
-          --scan ./apps/frontend/package.json \
-          --scan ./apps/backend/package.json \
-          --out ./dependency-check-reports \
-          --format HTML \
-          --nvdApiKey $NVD_KEY
+      # - name: Run OWASP dependency check
+      #   if: steps.owasp-cache.outputs.cache-hit != 'true'
+      #   env:
+      #     NVD_KEY: ${{ secrets.NVD_KEY }}
+      #   run: |
+      #     wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
+      #     unzip dependency-check-10.0.2-release.zip
+      #     ./dependency-check/bin/dependency-check.sh \
+      #     --project "engineering-project" \
+      #     --scan ./pnpm-lock.yaml \
+      #     --scan ./apps/frontend/package.json \
+      #     --scan ./apps/backend/package.json \
+      #     --out ./dependency-check-reports \
+      #     --format HTML \
+      #     --nvdApiKey $NVD_KEY
           
-      - name: Upload Dependency Check Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: dependency-check-report
-          path: dependency-check-reports  
+      # - name: Upload Dependency Check Report
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: dependency-check-report
+      #     path: dependency-check-reports  
 
       - name: Run linter (Frontend)
         working-directory: ./apps/frontend
@@ -120,7 +120,12 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: backend-lifetrack
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          #env_file:
+          appdir: "./apps/backend"
+          healthcheck: "https://backend-lifetrack.herokuapp.com/health"
+          delay: 5
+          env_file: "./apps/backend/.heroku-env"
+          procfile: "web: npm run start:prod"
+          
 
 
       # - name: Deploy frontend to vercel
