@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private configService: ConfigService
   ) {}
 
   async signIn(
@@ -34,10 +36,15 @@ export class AuthService {
     const payload = { sub: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
     console.log(token)
+    const isProduction = this.configService.get('HEROKU_DATABASE_URL') !== undefined;
     response.cookie('access_token', token, {
       httpOnly: true,
       maxAge: 60 * 60 * 1000,
-      sameSite: 'strict'
+      sameSite: 'strict',
+      secure: isProduction? true : undefined
+      
+
+
     })
 
     return { message: 'Logged in succesfully' };
