@@ -140,6 +140,7 @@ jobs:
           HD_POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
           HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
           HD_FRONTEND_URL: ${{ secrets.HEROKU_EMAIL }}
+          HD_HEROKU_DATABASE_URL: ${{ secrets.HEROKU_DATABASE_URL }}
   
   deploy-frontend:
     needs: deploy-backend
