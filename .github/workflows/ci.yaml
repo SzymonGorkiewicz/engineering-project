@@ -130,6 +130,7 @@ jobs:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "./apps/backend"
           healthcheck: "${{ secrets.HEROKU_BACKEND_URL }}health"
+          checkstring: "ok"
           delay: 10
           #procfile: "web: npm run start:prod"
         env:
