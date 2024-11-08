@@ -40,7 +40,7 @@ export class AuthService {
     response.cookie('access_token', token, {
       httpOnly: true,
       maxAge: 60 * 60 * 1000,
-      sameSite: 'strict',
+      sameSite: isProduction? "none" : "strict",
       secure: isProduction? true : undefined
       
 
