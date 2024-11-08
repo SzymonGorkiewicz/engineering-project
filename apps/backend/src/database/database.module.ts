@@ -26,7 +26,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           username: isProduction ? undefined : configService.get('POSTGRES_USER'),
           password: isProduction ? undefined : configService.get<string>('POSTGRES_PASSWORD'),
           database: isProduction ? undefined : configService.get('POSTGRES_DB'),
-          ssl: isProduction ? { rejectUnauthorized: false } : undefined,  // Wymuszamy SSL tylko na produkcji
+          ssl: isProduction ? { rejectUnauthorized: false } : false,  // Wymuszamy SSL tylko na produkcji
+          options: isProduction? {encryption: true} : undefined,
           entities: [__dirname + '/../**/**/**/*.entity{.ts,.js}'],
           synchronize: true,
         };
