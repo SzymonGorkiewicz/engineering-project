@@ -129,8 +129,8 @@ jobs:
           heroku_app_name: backend-lifetrack
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "./apps/backend"
-          healthcheck: "https://backend-lifetrack.herokuapp.com/health"
-          delay: 5
+          healthcheck: "${{ secrets.HEROKU_BACKEND_URL }}health"
+          delay: 10
           #procfile: "web: npm run start:prod"
         env:
           HD_POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
