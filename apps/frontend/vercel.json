@@ -3,5 +3,5 @@
     "github": {
     "enabled": false
     },
-    "installCommand": "pnpm install"
+    "installCommand": "npm install"
 }
