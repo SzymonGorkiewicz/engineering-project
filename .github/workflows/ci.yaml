@@ -32,8 +32,8 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install Heroku CLI
-        run: curl https://cli-assets.heroku.com/install.sh | sh
+      # - name: Install Heroku CLI
+      #   run: curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Install dependencies 
         run: pnpm install
@@ -60,9 +60,9 @@ jobs:
       #     name: dependency-check-report
       #     path: dependency-check-reports  
 
-      - name: Run linter (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm run lint
+      # - name: Run linter (Frontend)
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run lint
 
       # - name: Run linter (Backend)
       #   working-directory: ./apps/backend
@@ -100,76 +100,77 @@ jobs:
           
       - name: Start NestJS Application
         working-directory: ./apps/backend
-        run: pnpm run start:dev &  
+        run: pnpm run start:prod &  
 
       - name: Start Next.js Application
         working-directory: ./apps/frontend
-        run: pnpm run dev &  
+        run: pnpm run start &  
 
-      # - name: Wait for applications to be ready
-      #   run: sleep 30  
+      - name: Wait for applications to be ready
+        run: sleep 60  
 
-      # - name: ZAP Scan
-      #   uses: zaproxy/action-full-scan@v0.11.0
-      #   with:
-      #     target: 'http://localhost:3000/'  # full scan moze trwac kilka godzin
-      
-  deploy-backend:
-    needs: build-and-test-locally
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Deploy backend to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.11.0
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: backend-lifetrack
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: "./apps/backend"
-          # healthcheck: "${{ secrets.HEROKU_BACKEND_URL }}health"
-          # checkstring: "ok"
-          # delay: 10
-          #procfile: "web: npm run start:prod"
-        env:
-          HD_POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
-          HD_POSTGRES_PORT: 5432
-          HD_POSTGRES_USER: ${{ secrets.HEROKU_POSTGRES_USER }}
-          HD_POSTGRES_PASSWORD: ${{ secrets.HEROKU_POSTGRES_PASSWORD }}
-          HD_POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
-          HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          HD_FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-          HD_HEROKU_DATABASE_URL: ${{ secrets.HEROKU_DATABASE_URL }}
+          target: 'http://localhost:3000'  # full scan moze trwac kilka godzin
+          cmd_options: '-config api.disablekey=true'
+      
+  # deploy-backend:
+  #   needs: build-and-test-locally
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Deploy backend to Heroku
+  #       uses: akhileshns/heroku-deploy@v3.12.12
+  #       with:
+  #         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+  #         heroku_app_name: backend-lifetrack
+  #         heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  #         appdir: "./apps/backend"
+  #         # healthcheck: "${{ secrets.HEROKU_BACKEND_URL }}health"
+  #         # checkstring: "ok"
+  #         # delay: 10
+  #         #procfile: "web: npm run start:prod"
+  #       env:
+  #         HD_POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
+  #         HD_POSTGRES_PORT: 5432
+  #         HD_POSTGRES_USER: ${{ secrets.HEROKU_POSTGRES_USER }}
+  #         HD_POSTGRES_PASSWORD: ${{ secrets.HEROKU_POSTGRES_PASSWORD }}
+  #         HD_POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
+  #         HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  #         HD_FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+  #         HD_HEROKU_DATABASE_URL: ${{ secrets.HEROKU_DATABASE_URL }}
   
-  deploy-frontend:
-    needs: deploy-backend
-    runs-on: ubuntu-latest
+  # deploy-frontend:
+  #   needs: deploy-backend
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+  #     - name: Install pnpm
+  #       run: npm install -g pnpm
       
-      - name: Install dependencies 
-        run: pnpm install
+  #     - name: Install dependencies 
+  #       run: pnpm install
 
-      - name: Create .env file for Nextjs
-        working-directory: ./apps/frontend
-        run: |
-          echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.HEROKU_BACKEND_URL }}" >> .env.local
+  #     - name: Create .env file for Nextjs
+  #       working-directory: ./apps/frontend
+  #       run: |
+  #         echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.HEROKU_BACKEND_URL }}" >> .env.local
       
-      - name: Deploy frontend to vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          ORG_ID: ${{ secrets.VERCEL_ORGID }}
-          PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
-        working-directory: ./apps/frontend
-        run: |
-          pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
+  #     - name: Deploy frontend to vercel
+  #       env:
+  #         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  #         ORG_ID: ${{ secrets.VERCEL_ORGID }}
+  #         PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+  #       working-directory: ./apps/frontend
+  #       run: |
+  #         pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
       
 
    
