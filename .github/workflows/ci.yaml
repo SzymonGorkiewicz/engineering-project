@@ -11,6 +11,8 @@ on:
 jobs:
   build-and-test-locally:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
 
     steps:
       - name: Checkout code
