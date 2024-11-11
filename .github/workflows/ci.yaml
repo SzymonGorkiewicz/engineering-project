@@ -118,8 +118,8 @@ jobs:
 
       - name: ZAP Scan
         run: |
-        docker pull owasp/zap2docker-stable
-        docker run -v $(pwd):/zap/wrk/:rw --network="host" zaproxy/zap-stable zap-baseline.py -t https://localhost:3001/register -r scan-report.html
+          docker pull owasp/zap2docker-stable
+          docker run -v $(pwd):/zap/wrk/:rw --network="host" zaproxy/zap-stable zap-baseline.py -t https://localhost:3001/register -r scan-report.html
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
