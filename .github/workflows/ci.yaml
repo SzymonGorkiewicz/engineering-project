@@ -107,14 +107,26 @@ jobs:
         run: pnpm run start &  
 
       - name: Wait for applications to be ready
-        run: sleep 60  
+        run: sleep 30  
+
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-full-scan@v0.11.0
+      #   with:
+      #     target: 'http://localhost:3001/register'
+      #     allow_issue_writing: false
+      #     cmd_options: '-J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true"'
 
       - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.11.0
+        run: |
+        docker pull owasp/zap2docker-stable
+        docker run -v $(pwd):/zap/wrk/:rw --network="host" zaproxy/zap-stable zap-baseline.py -t https://localhost:3001/register -r scan-report.html
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          target: 'http://localhost:3001/register'
-          allow_issue_writing: false
-          cmd_options: '-J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true"'
+          name: zap-scan-report
+          path: scan-report.html
+
       
   # deploy-backend:
   #   needs: build-and-test-locally
