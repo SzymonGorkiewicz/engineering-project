@@ -114,7 +114,7 @@ jobs:
         with:
           target: 'http://localhost:3001/register'
           allow_issue_writing: false
-          cmd_options: '-j -J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true"'
+          cmd_options: '-j -u http://localhost3001/login -J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true -config spider.maxDuration-120 -config spider.maxDepth=3 -config ajaxSpider.maxDepth=3"'
 
 
       
