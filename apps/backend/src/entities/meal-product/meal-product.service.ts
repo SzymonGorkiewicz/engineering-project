@@ -9,16 +9,8 @@ import { Repository } from 'typeorm';
 export class MealProductService {
   constructor(@InjectRepository(MealProduct) private mealProductRepository: Repository<MealProduct>){}
 
-  create(createMealProductDto: CreateMealProductDto) {
-    return 'This action adds a new mealProduct';
-  }
-
   async findAll(mealID:number):Promise<MealProduct[]> {
     return await this.mealProductRepository.find({where: {meal: {id:mealID}}, relations: ['product']});
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} mealProduct`;
   }
 
   async update(id: number, updateMealProductDto: UpdateMealProductDto):Promise<MealProduct> {

@@ -1,10 +1,10 @@
 'use client'
 import withAuth from "../_components/protected-routes"
 import AddDay from "./_components/add_day"
-
+import Navbar from "../_components/navbar"
 const Page : React.FC = () => {
     return <>
-        <h1>homepage works</h1> 
+        <Navbar></Navbar>
         <AddDay></AddDay>
     </>
 }

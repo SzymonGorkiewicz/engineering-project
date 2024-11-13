@@ -15,19 +15,9 @@ import { UpdateMealProductDto } from './dto/update-meal-product.dto';
 export class MealProductController {
   constructor(private readonly mealProductService: MealProductService) {}
 
-  @Post()
-  create(@Body() createMealProductDto: CreateMealProductDto) {
-    return this.mealProductService.create(createMealProductDto);
-  }
-
-  @Get()
-  findAll(@Body() body: {mealID:number}) {
-    return this.mealProductService.findAll(body.mealID);
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mealProductService.findOne(+id);
+  findAll(@Param('id') id: string) {
+    return this.mealProductService.findAll(+id);
   }
 
   @Patch(':id')

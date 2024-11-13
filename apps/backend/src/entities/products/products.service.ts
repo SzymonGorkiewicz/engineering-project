@@ -18,18 +18,15 @@ export class ProductsService {
 
   async get_or_create_product(productName:string):Promise<Product> {
     try{
-      console.log("fetched from database")
       const product = await this.findOne(productName)
       return product
     }catch(error){
-      console.log("fetched from api")
       const apiUrl = `${this.configService.get<string>('FOOD_API_URL')}=${productName}`;
       const response = await axios.get(apiUrl, {
         headers: { 'X-Api-Key': this.configService.get<string>('API_KEY') },
       });
       if (response.data['items'][0]){
         const api_product = response.data['items'][0]
-        
         const typedProduct : CreateProductDto = {
           name: api_product.name,
           protein_per_100g: api_product.protein_g,
@@ -46,6 +43,7 @@ export class ProductsService {
 
   async addProductToMeal(mealId: number, productName: string): Promise<MealProduct> {
     const product = await this.get_or_create_product(productName);
+    console.log(product)
     const meal = await this.mealRepository.findOne({ where: { id: mealId } });
 
     if (!meal) {
@@ -65,6 +63,7 @@ export class ProductsService {
     if (!product){
       throw new Error('Produkt nie znaleziony w bazie danych');
     }
+    
     return product
   }
 

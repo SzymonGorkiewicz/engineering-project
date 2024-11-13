@@ -17,6 +17,7 @@ export class ProductsController {
 
   @Post('add')
   create(@Body() body: {mealID:number, productName:string}) {
+    console.log(body)
     return this.productsService.addProductToMeal(body.mealID, body.productName);
   }
 

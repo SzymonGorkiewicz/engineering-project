@@ -32,49 +32,46 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # - name: Install Heroku CLI
-      #   run: curl https://cli-assets.heroku.com/install.sh | sh
-
       - name: Install dependencies 
         run: pnpm install
         
-      # - name: Run OWASP dependency check
-      #   if: steps.owasp-cache.outputs.cache-hit != 'true'
-      #   env:
-      #     NVD_KEY: ${{ secrets.NVD_KEY }}
-      #   run: |
-      #     wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
-      #     unzip dependency-check-10.0.2-release.zip
-      #     ./dependency-check/bin/dependency-check.sh \
-      #     --project "engineering-project" \
-      #     --scan ./pnpm-lock.yaml \
-      #     --scan ./apps/frontend/package.json \
-      #     --scan ./apps/backend/package.json \
-      #     --out ./dependency-check-reports \
-      #     --format HTML \
-      #     --nvdApiKey $NVD_KEY
+      - name: Run OWASP dependency check
+        if: steps.owasp-cache.outputs.cache-hit != 'true'
+        env:
+          NVD_KEY: ${{ secrets.NVD_KEY }}
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
+          unzip dependency-check-10.0.2-release.zip
+          ./dependency-check/bin/dependency-check.sh \
+          --project "engineering-project" \
+          --scan ./pnpm-lock.yaml \
+          --scan ./apps/frontend/package.json \
+          --scan ./apps/backend/package.json \
+          --out ./dependency-check-reports \
+          --format HTML \
+          --nvdApiKey $NVD_KEY
           
-      # - name: Upload Dependency Check Report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: dependency-check-report
-      #     path: dependency-check-reports  
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-reports  
 
-      # - name: Run linter (Frontend)
-      #   working-directory: ./apps/frontend
-      #   run: pnpm run lint
+      - name: Run linter (Frontend)
+        working-directory: ./apps/frontend
+        run: pnpm run lint
 
-      # - name: Run linter (Backend)
-      #   working-directory: ./apps/backend
-      #   run: pnpm run lint
+      - name: Run linter (Backend)
+        working-directory: ./apps/backend
+        run: pnpm run lint
 
-      # - name: Run TypeScript check (Frontend)
-      #   working-directory: ./apps/frontend
-      #   run: pnpm exec tsc --noEmit
+      - name: Run TypeScript check (Frontend)
+        working-directory: ./apps/frontend
+        run: pnpm exec tsc --noEmit
 
-      # - name: Run TypeScript check (Backend)
-      #   working-directory: ./apps/backend
-      #   run: pnpm exec tsc --noEmit
+      - name: Run TypeScript check (Backend)
+        working-directory: ./apps/backend
+        run: pnpm exec tsc --noEmit
 
       - name: Create .env file for NestJS
         working-directory: ./apps/backend
@@ -114,66 +111,62 @@ jobs:
         with:
           target: 'http://localhost:3001/register'
           allow_issue_writing: false
-          cmd_options: '-j -u http://localhost:3001/login -J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true -config spider.maxDuration-120 -config spider.maxDepth=3 -config ajaxSpider.maxDepth=3"'
+          cmd_options: '-j -J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true -config spider.maxDuration-120 -config spider.maxDepth=3 -config ajaxSpider.maxDepth=3"'
 
 
       
-  # deploy-backend:
-  #   needs: build-and-test-locally
-  #   runs-on: ubuntu-latest
+  deploy-backend:
+    needs: build-and-test-locally
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Deploy backend to Heroku
-  #       uses: akhileshns/heroku-deploy@v3.12.12
-  #       with:
-  #         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-  #         heroku_app_name: backend-lifetrack
-  #         heroku_email: ${{ secrets.HEROKU_EMAIL }}
-  #         appdir: "./apps/backend"
-  #         # healthcheck: "${{ secrets.HEROKU_BACKEND_URL }}health"
-  #         # checkstring: "ok"
-  #         # delay: 10
-  #         #procfile: "web: npm run start:prod"
-  #       env:
-  #         HD_POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
-  #         HD_POSTGRES_PORT: 5432
-  #         HD_POSTGRES_USER: ${{ secrets.HEROKU_POSTGRES_USER }}
-  #         HD_POSTGRES_PASSWORD: ${{ secrets.HEROKU_POSTGRES_PASSWORD }}
-  #         HD_POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
-  #         HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
-  #         HD_FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-  #         HD_HEROKU_DATABASE_URL: ${{ secrets.HEROKU_DATABASE_URL }}
+      - name: Deploy backend to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: backend-lifetrack
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "./apps/backend"
+        env:
+          HD_POSTGRES_HOST: ${{ secrets.HEROKU_POSTGRES_HOST }}
+          HD_POSTGRES_PORT: 5432
+          HD_POSTGRES_USER: ${{ secrets.HEROKU_POSTGRES_USER }}
+          HD_POSTGRES_PASSWORD: ${{ secrets.HEROKU_POSTGRES_PASSWORD }}
+          HD_POSTGRES_DB: ${{ secrets.HEROKU_POSTGRES_DB }}
+          HD_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          HD_FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          HD_HEROKU_DATABASE_URL: ${{ secrets.HEROKU_DATABASE_URL }}
   
-  # deploy-frontend:
-  #   needs: deploy-backend
-  #   runs-on: ubuntu-latest
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Install pnpm
-  #       run: npm install -g pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
       
-  #     - name: Install dependencies 
-  #       run: pnpm install
+      - name: Install dependencies 
+        run: pnpm install
 
-  #     - name: Create .env file for Nextjs
-  #       working-directory: ./apps/frontend
-  #       run: |
-  #         echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.HEROKU_BACKEND_URL }}" >> .env.local
+      - name: Create .env file for Nextjs
+        working-directory: ./apps/frontend
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.HEROKU_BACKEND_URL }}" >> .env.local # to nie działa dodac inaczej zmienna do vercela
       
-  #     - name: Deploy frontend to vercel
-  #       env:
-  #         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #         ORG_ID: ${{ secrets.VERCEL_ORGID }}
-  #         PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
-  #       working-directory: ./apps/frontend
-  #       run: |
-  #         pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
+      - name: Deploy frontend to vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          ORG_ID: ${{ secrets.VERCEL_ORGID }}
+          PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+        working-directory: ./apps/frontend
+        run: |
+          pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
       
 
    

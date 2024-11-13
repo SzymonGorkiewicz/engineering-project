@@ -20,14 +20,10 @@ export class MealsController {
     return this.mealsService.create(createMealDto);
   }
 
-  @Get()
-  findAll() {
-    return this.mealsService.findAll();
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.mealsService.findOne(+id);
+    return this.mealsService.findAll(+id);
   }
 
   @Patch(':id')
