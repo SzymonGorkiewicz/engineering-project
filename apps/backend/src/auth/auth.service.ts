@@ -69,4 +69,16 @@ export class AuthService {
 
     return await this.userRepository.save(user);
   }
+
+  async signOut(response: Response):Promise<{message:string}>{
+    const isProduction = this.configService.get('HEROKU_DATABASE_URL') !== undefined;
+
+    response.cookie('access_token','',{
+      httpOnly: true,
+      maxAge: 0,
+      sameSite: isProduction? "none" : "strict",
+      secure: isProduction? true : undefined
+    })
+    return {message: "Logged out succesfully"}
+  }
 }

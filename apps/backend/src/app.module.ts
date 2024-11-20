@@ -35,6 +35,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer){
     consumer
     .apply(AuthMiddleware)
-    .forRoutes('days','body-stats','meal-product','meals','products','auth/check-auth')
+    .forRoutes('days','body-stats','meal-product','meals','products','auth/check-auth', 'auth/logout')
   }
 }

@@ -25,6 +25,12 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  async signOut(@Res({passthrough: true}) response: Response) {
+    return this.authService.signOut(response);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Post('register')
   signUp(@Body() signUpDto: CreateUserDto) {
     return this.authService.signUp(signUpDto);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Box, Typography, List, ListItem, ListItemText, Collapse } from "@mui/material";
+import { Button, Box, Typography, List, ListItem, ListItemText, Collapse, Container } from "@mui/material";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -55,40 +55,46 @@ export default function AddDay() {
     }, []);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-                <DatePicker 
-                label="Callendar" 
-                defaultValue={dayjs()}
-                value={selectedDate}
-                onChange={(newValue)=> setSelectedDate(newValue)}
-                minDate={minDate}
-                maxDate={maxDate}
-                />
-                <Button variant="contained" onClick={handleAddDay}>
-                Add Day
-                </Button>
-                <Box mt={3}>
-                    <Typography variant="h6">Days:</Typography>
-                    <List>
-                        {days.map((day) => (
-                             <Box key={day.id}>
-                             <ListItem onClick={() => handleToggleExpand(day.id)}>
-                                 <ListItemText
-                                     primary={`Data: ${dayjs(day.date).format("MM-DD-YYYY")}`}
-                                     secondary={`Białko: ${day.total_protein}, Węglowodany: ${day.total_carbohydrates}, Tłuszcze: ${day.total_fat}`}
-                                 />
-                             </ListItem>
-                             <Collapse in={expandedDayId === day.id} timeout="auto" unmountOnExit>
-                                 <Box ml={4}>
-                                     <Meals dayId={day.id} />
-                                 </Box>
-                             </Collapse>
-                         </Box>
-                        ))}
-                    </List>
-                </Box>
-            </DemoContainer>
-        </LocalizationProvider>
+        <Container sx={{ display: "flex", border:1, borderColor:"gray", borderRadius:6, padding:5}}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']} >
+                    <Box display={"flex"} flexDirection={"row"} gap={10}>
+                        <Box display={"flex"} flexDirection={"column"}>
+                        <DatePicker 
+                        label="Callendar" 
+                        defaultValue={dayjs()}
+                        value={selectedDate}
+                        onChange={(newValue)=> setSelectedDate(newValue)}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        />
+                        <Button variant="contained" onClick={handleAddDay}>
+                        Add Day
+                        </Button>
+                        </Box>
+                        <Box>
+                            <Typography variant="h6">Days:</Typography>
+                            <List>
+                                {days.map((day) => (
+                                    <Box key={day.id}>
+                                        <ListItem onClick={() => handleToggleExpand(day.id)} sx={{cursor: 'pointer'}}>
+                                            <ListItemText
+                                                primary={`Data: ${dayjs(day.date).format("MM-DD-YYYY")}`}
+                                                secondary={`Białko: ${day.total_protein}, Węglowodany: ${day.total_carbohydrates}, Tłuszcze: ${day.total_fat}`}
+                                            />
+                                        </ListItem>
+                                        <Collapse in={expandedDayId === day.id} timeout="auto" unmountOnExit>
+                                            <Box ml={4}>
+                                                <Meals dayId={day.id} />
+                                            </Box>
+                                        </Collapse>
+                                    </Box>
+                                ))}
+                            </List>
+                        </Box>
+                    </Box>
+                </DemoContainer>
+            </LocalizationProvider>
+        </Container>
     );
 }

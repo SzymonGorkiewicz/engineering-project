@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBodyStatDto } from './dto/create-body-stat.dto';
 import { UpdateBodyStatDto } from './dto/update-body-stat.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BodyStats } from './entities/body-stat.entity';
 
 @Injectable()
 export class BodyStatsService {
-  create(createBodyStatDto: CreateBodyStatDto) {
+  constructor(@InjectRepository(BodyStats) private bodyStatsRepository: Repository<BodyStats>){}
+
+  async create(createBodyStatDto: CreateBodyStatDto, userID: number) {
+    const bodyStats = this.bodyStatsRepository.create({
+      ...createBodyStatDto,
+      user: {id:userID}
+    })
+
+    await this.bodyStatsRepository.save(bodyStats)
+    
     return 'This action adds a new bodyStat';
   }
 
-  findAll() {
-    return `This action returns all bodyStats`;
+  async findAll(id: number):Promise<BodyStats[]> {
+    const bodyStatsForUser = await this.bodyStatsRepository.find({where: {user:{id:id}}})
+    return bodyStatsForUser;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} bodyStat`;
+  async update(id: number, updateBodyStatDto: UpdateBodyStatDto):Promise<BodyStats> {
+    const bodyStat = await this.bodyStatsRepository.findOne({ where: { id } });
+
+    if (!bodyStat) {
+      throw new NotFoundException(`BodyStat with id ${id} not found`);
+    }
+
+    const updatedBodyStat = Object.assign(bodyStat, updateBodyStatDto);
+
+    return await this.bodyStatsRepository.save(updatedBodyStat);;
   }
 
-  update(id: number, updateBodyStatDto: UpdateBodyStatDto) {
-    return `This action updates a #${id} bodyStat`;
-  }
+  async remove(id: number) {
+    console.log('wchodzi')
+    const deleteResult = await this.bodyStatsRepository.delete(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} bodyStat`;
-  }
+    if (deleteResult.affected === 0) {
+      throw new Error(`BodyStat with ID ${id} not found`);
+    }
+
+    return `BodyStat with ID ${id} has been removed successfully.`;
+    }
 }
