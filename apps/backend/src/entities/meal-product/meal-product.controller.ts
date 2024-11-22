@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { MealProductService } from './meal-product.service';
-import { CreateMealProductDto } from './dto/create-meal-product.dto';
 import { UpdateMealProductDto } from './dto/update-meal-product.dto';
 
 @Controller('meal-product')
@@ -25,6 +16,7 @@ export class MealProductController {
     @Param('id') id: string,
     @Body() updateMealProductDto: UpdateMealProductDto,
   ) {
+    console.log('kontroler gramaatura');
     return this.mealProductService.update(+id, updateMealProductDto);
   }
 

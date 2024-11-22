@@ -2,19 +2,18 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  JoinTable,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Day } from 'src/entities/days/entities/day.entity';
-import { Product } from 'src/entities/products/entities/product.entity';
+import { MealProduct } from 'src/entities/meal-product/entities/meal-product.entity';
 
 export enum MealType {
-  BREAKFAST = 'breakfast',
-  SECOND_BREAKFAST = 'second_breakfast',
-  LUNCH = 'lunch',
-  AFTERNOON_SNACK = 'afternoon_snack',
-  DINNER = 'dinner',
+  BREAKFAST = 'Breakfast',
+  SECOND_BREAKFAST = 'Second Breakfast',
+  LUNCH = 'Lunch',
+  AFTERNOON_SNACK = 'Afternoon Snack',
+  DINNER = 'Dinner',
 }
 
 @Entity()
@@ -32,6 +31,18 @@ export class Meal {
   })
   meal_type: MealType;
 
-  @ManyToMany(() => Product, (product) => product.meals, { cascade: true })
-  products: Product[];
+  @Column({ type: 'float', default: 0 })
+  total_protein: number;
+
+  @Column({ type: 'float', default: 0 })
+  total_carbohydrates: number;
+
+  @Column({ type: 'float', default: 0 })
+  total_fat: number;
+
+  @Column({ type: 'float', default: 0 })
+  total_calories: number;
+
+  @OneToMany(() => MealProduct, (mealProduct) => mealProduct.meal)
+  mealProducts: MealProduct[];
 }

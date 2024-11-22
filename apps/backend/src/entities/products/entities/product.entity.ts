@@ -1,11 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToMany,
-} from 'typeorm';
-import { Meal } from 'src/entities/meals/entities/meal.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { MealProduct } from 'src/entities/meal-product/entities/meal-product.entity';
 
 @Entity()
 export class Product {
@@ -27,6 +21,6 @@ export class Product {
   @Column({ type: 'float', nullable: false })
   calories_per_100g: number;
 
-  @ManyToMany(() => Meal, (meal) => meal.products)
-  meals: Meal[];
+  @OneToMany(() => MealProduct, (mealProduct) => mealProduct.product)
+  mealProducts: MealProduct[];
 }

@@ -20,9 +20,8 @@ export class MealsController {
     return this.mealsService.create(createMealDto);
   }
 
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findAll(@Param('id') id: string) {
     return this.mealsService.findAll(+id);
   }
 

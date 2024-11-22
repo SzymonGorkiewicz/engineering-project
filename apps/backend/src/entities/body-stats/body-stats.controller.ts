@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  Request
+  Request,
 } from '@nestjs/common';
 import { BodyStatsService } from './body-stats.service';
 import { CreateBodyStatDto } from './dto/create-body-stat.dto';
@@ -18,9 +18,9 @@ export class BodyStatsController {
 
   @Post()
   create(@Body() createBodyStatDto: CreateBodyStatDto, @Request() request) {
+    console.log('whcodzi');
     return this.bodyStatsService.create(createBodyStatDto, request.user.sub);
   }
-
 
   @Get()
   findAll(@Request() request) {
@@ -28,7 +28,7 @@ export class BodyStatsController {
   }
 
   @Get(':id')
-  findOne(@Request() request, @Param('id') id :string ) {
+  findOne(@Request() request, @Param('id') id: string) {
     return this.bodyStatsService.findOne(request.user.sub, +id);
   }
 

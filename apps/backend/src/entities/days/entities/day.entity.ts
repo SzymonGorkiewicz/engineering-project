@@ -32,6 +32,9 @@ export class Day {
   @Column({ type: 'float', default: 0 })
   total_fat: number;
 
+  @Column({ type: 'float', default: 0 })
+  total_calories: number;
+
   @OneToMany(() => Meal, (meal) => meal.day)
   meals: Meal[];
 

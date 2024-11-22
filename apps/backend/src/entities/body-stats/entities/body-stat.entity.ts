@@ -1,7 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  Unique,
+} from 'typeorm';
 import { User } from 'src/entities/users/entities/user.entity';
 
 @Entity()
+@Unique(['user', 'date'])
 export class BodyStats {
   @PrimaryGeneratedColumn()
   id: number;
