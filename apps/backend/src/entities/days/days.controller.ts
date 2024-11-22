@@ -22,6 +22,7 @@ export class DaysController {
 
   @Post()
   create(@Body() createDayDto: CreateDayDto, @Request() request) {
+    console.log('wchodzi')
     return this.daysService.create(createDayDto, request.user.sub);
   }
 

@@ -22,6 +22,7 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string[]>([])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +36,10 @@ const RegisterPage: React.FC = () => {
       if (response.status === 200){
         router.push('/login')
       }
-    }catch(error){
-      console.error("Error while creating user", error)
+    }catch(error:unknown){
+      if (axios.isAxiosError(error)){
+        setErrorMessage(error.response?.data.message)
+      }
     }
   };
 
@@ -100,6 +103,13 @@ const RegisterPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            { errorMessage.length > 0 && (
+              <>
+                {errorMessage.map((message,index)=>(
+                  <p key={index} style={{color: 'red'}}>{message}</p>
+                ))}
+              </>
+            )}
             <Typography variant="body1">
             Already have an account?{' '}
             <Link href="/login" onClick={()=> router.push('/login')} underline="hover" color="primary">

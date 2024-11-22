@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -36,7 +36,7 @@ export class ProductsService {
         }
         return await this.productRepository.save(typedProduct)
       }
-      
+      throw new NotFoundException(`Product with name "${productName}" not found`);
     }
         
   }

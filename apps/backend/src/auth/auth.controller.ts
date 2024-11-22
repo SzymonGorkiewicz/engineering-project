@@ -6,11 +6,10 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
   Get,
   Request,
   Res,
-  UnauthorizedException
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -38,7 +37,6 @@ export class AuthController {
 
   @Get('check-auth')
   getProfile(@Request() req) {
-    console.log('wchodzi do check-auth')
     if (!req.user) {
         throw new UnauthorizedException('User not authenticated');
     }

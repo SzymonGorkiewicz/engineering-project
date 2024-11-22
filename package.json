@@ -23,12 +23,12 @@
   },
   "lint-staged": {
     "apps/backend/**/*.{js,ts}": [
-    "prettier --check",
-    "eslint"
+    "pnpm prettier --write",
+    "pnpm eslint --fix"
     ],
     "apps/frontend/**/*.{js,ts,tsx}": [
-      "prettier --check",
-      "eslint"
+      "prettier --write",
+      "pnpm eslint --fix"
     ]
   }
 }

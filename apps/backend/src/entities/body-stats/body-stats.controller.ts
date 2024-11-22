@@ -27,6 +27,11 @@ export class BodyStatsController {
     return this.bodyStatsService.findAll(request.user.sub);
   }
 
+  @Get(':id')
+  findOne(@Request() request, @Param('id') id :string ) {
+    return this.bodyStatsService.findOne(request.user.sub, +id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

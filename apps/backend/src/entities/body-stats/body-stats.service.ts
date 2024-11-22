@@ -25,6 +25,11 @@ export class BodyStatsService {
     return bodyStatsForUser;
   }
 
+  async findOne(userID:number, id: number):Promise<BodyStats> {
+    const oneBodyStat = await this.bodyStatsRepository.findOne({where:{ id:id, user:{id:userID}}})
+    return oneBodyStat;
+  }
+
   async update(id: number, updateBodyStatDto: UpdateBodyStatDto):Promise<BodyStats> {
     const bodyStat = await this.bodyStatsRepository.findOne({ where: { id } });
 

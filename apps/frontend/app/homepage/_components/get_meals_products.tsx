@@ -1,4 +1,3 @@
-// components/Products.tsx
 import React, { useState, useEffect } from "react";
 import { List, ListItem, ListItemText, TextField, Typography } from "@mui/material";
 import axios from "axios";
@@ -20,7 +19,7 @@ const Products: React.FC<ProductsProps> = ({ mealId, refresh }) => {
             setProducts(response.data);
             console.log(response.data)
         } catch (error) {
-            console.error("Błąd przy pobieraniu produktów:", error);
+            console.error("Error while fetching the products:", error);
         }
     };
 
@@ -50,11 +49,16 @@ const Products: React.FC<ProductsProps> = ({ mealId, refresh }) => {
             }, {
                 withCredentials: true,
             });
-            console.log("Gramatura została zaktualizowana");
         } catch (error) {
-            console.error("Błąd przy aktualizacji gramatury:", error);
+            console.error("Error while changing gramature:", error);
         }
     };
+
+    const calculateProductCalories = (calories:number,gramature:number)=>{
+        const caloriesCalculated = calories*(gramature/100)
+        return parseFloat(caloriesCalculated.toFixed(1))
+    }
+
 
     return (
         <List>
@@ -62,7 +66,7 @@ const Products: React.FC<ProductsProps> = ({ mealId, refresh }) => {
                 <ListItem key={product.id}>
                     <ListItemText
                         primary={product.product.name}
-                        secondary={`Kalorie: ${product.product.calories_per_100g/product.gramature}, Białko: ${product.product.protein_per_100g}, Węglowodany: ${product.product.carbohydrates_per_100g}, Tłuszcze: ${product.product.calories_per_100g}`}
+                        secondary={`Calories: ${calculateProductCalories(product.product.calories_per_100g, product.gramature)}, Protein: ${calculateProductCalories(product.product.protein_per_100g, product.gramature)}, Carbohydrates: ${calculateProductCalories(product.product.calories_per_100g, product.gramature)}, Fat: ${calculateProductCalories(product.product.fat_per_100g, product.gramature)}`}
                     />
                     <TextField
                         value={product.gramature}

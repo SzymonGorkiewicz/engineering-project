@@ -23,6 +23,7 @@ const BodyStats : React.FC = () =>{
         id:0})
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+    const [currentStatID, setCurrentStatID] = useState<number|null>(null);
 
 
 
@@ -45,7 +46,6 @@ const BodyStats : React.FC = () =>{
 
     const handleSubmit = async (event: React.FormEvent) =>{
         event.preventDefault();
-        console.log(bodyStatForm)
         try {
             await axios.post(`${backendURL}body-stats`, bodyStatForm, {withCredentials:true})
             fetchBodyStatistics()
@@ -120,18 +120,22 @@ const BodyStats : React.FC = () =>{
                                     </Typography>
                                 </Box>
                                 <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', gap:3}}>
-                                    <IconButton onClick={()=>setDeleteDialogOpen(true)}>
+                                    <IconButton onClick={()=>{setDeleteDialogOpen(true); setCurrentStatID(stat.id)}}>
                                         <DeleteOutlineOutlinedIcon/>    
                                     </IconButton>
-                                    <IconButton onClick={()=>{setEditDialogOpen(true); console.log("Clicked delete for:", stat);}}>
+                                    <IconButton onClick={()=>{setEditDialogOpen(true); setCurrentStatID(stat.id)}}>
                                         <EditOutlinedIcon/>   
                                     </IconButton>   
                                 </Box>
                             </Box>
                         </CardContent>
                         </Card>
-                        <ConfirmDeleteDialog open={isDeleteDialogOpen} onClose={()=>setDeleteDialogOpen(false)} id={stat.id}  fetchBodyStatistics={fetchBodyStatistics}/>
-                        <EditDialog open={isEditDialogOpen} onClose={()=>setEditDialogOpen(false)} statistics={stat} fetchBodyStatistics={fetchBodyStatistics}/>
+                        {currentStatID && (
+                            <>
+                                <ConfirmDeleteDialog open={isDeleteDialogOpen} onClose={()=>setDeleteDialogOpen(false)} id={currentStatID}  fetchBodyStatistics={fetchBodyStatistics}/>
+                                <EditDialog open={isEditDialogOpen} onClose={()=>setEditDialogOpen(false)} id={currentStatID} fetchBodyStatistics={fetchBodyStatistics}/>
+                            </>
+                        )}
                     </Grid>
                     ))}
                 </Grid>

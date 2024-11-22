@@ -8,6 +8,7 @@ import axios from "axios";
 import dayjs, { Dayjs } from 'dayjs';
 import Meals from "./get_meals";
 import { Day } from "./types";
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 export default function AddDay() {
     const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -21,10 +22,11 @@ export default function AddDay() {
                 await axios.post(`${backendURL}days`, { date: selectedDate.format("YYYY-MM-DD") }, {
                     withCredentials:true
                   } );
-                console.log("Dzień utworzony:", selectedDate);
                 fetchDays()
+                enqueueSnackbar(`Day ${selectedDate.format('MM-DD-YYYY')} succesfully created`, {variant: 'success', anchorOrigin:{vertical: 'top', horizontal: 'right'}})
             } catch (error) {
-                console.error("Błąd przy tworzeniu dnia:", error);
+                console.error(error)
+                enqueueSnackbar(`Day ${selectedDate.format('MM-DD-YYYY')} is already created`, {variant: 'error', anchorOrigin:{vertical: 'top', horizontal: 'right'}})
             }
         }
     };
@@ -38,7 +40,7 @@ export default function AddDay() {
             setDays(response.data);
             console.log(response.data)
         } catch (error) {
-            console.error("Błąd przy pobieraniu dni:", error);
+            console.error("Error while fetching days:", error);
         }
     };
 
@@ -54,7 +56,9 @@ export default function AddDay() {
         fetchDays();
     }, []);
 
+
     return (
+        <SnackbarProvider preventDuplicate autoHideDuration={3000}>
         <Container sx={{ display: "flex", border:1, borderColor:"gray", borderRadius:6, padding:5}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']} >
@@ -79,8 +83,8 @@ export default function AddDay() {
                                     <Box key={day.id}>
                                         <ListItem onClick={() => handleToggleExpand(day.id)} sx={{cursor: 'pointer'}}>
                                             <ListItemText
-                                                primary={`Data: ${dayjs(day.date).format("MM-DD-YYYY")}`}
-                                                secondary={`Białko: ${day.total_protein}, Węglowodany: ${day.total_carbohydrates}, Tłuszcze: ${day.total_fat}`}
+                                                primary={`Date: ${dayjs(day.date).format("MM-DD-YYYY")}`}
+                                                secondary={`Protein: ${day.total_protein}, Carbohydrates: ${day.total_carbohydrates}, Fat: ${day.total_fat}`}
                                             />
                                         </ListItem>
                                         <Collapse in={expandedDayId === day.id} timeout="auto" unmountOnExit>
@@ -94,7 +98,10 @@ export default function AddDay() {
                         </Box>
                     </Box>
                 </DemoContainer>
-            </LocalizationProvider>
+            </LocalizationProvider>     
         </Container>
+        </SnackbarProvider>
+
+        
     );
 }

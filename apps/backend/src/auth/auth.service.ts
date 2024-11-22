@@ -35,7 +35,6 @@ export class AuthService {
 
     const payload = { sub: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
-    console.log(token)
     const isProduction = this.configService.get('HEROKU_DATABASE_URL') !== undefined;
     response.cookie('access_token', token, {
       httpOnly: true,

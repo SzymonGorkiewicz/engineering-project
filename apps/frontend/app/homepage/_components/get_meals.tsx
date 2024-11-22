@@ -1,10 +1,10 @@
 // components/Meals.tsx
 import React, { useState, useEffect } from "react";
 import { Box, Button, Collapse, List, ListItem, ListItemText, TextField } from "@mui/material";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Products from "./get_meals_products";
 import { Meal } from "./types";
-
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 type MealsProps = {
     dayId: number;
 };
@@ -21,7 +21,10 @@ const Meals: React.FC<MealsProps> = ({ dayId }) => {
             setProductName("")
             setRefreshProducts(!refreshProducts);
         } catch (error) {
-            console.error("Błąd przy pobieraniu posiłków:", error);
+            if (axios.isAxiosError(error)){
+                enqueueSnackbar(error.response?.data.message, {variant: 'error', anchorOrigin:{vertical: 'top', horizontal: 'right'}})    
+            }
+            
         }
     }
 
@@ -33,7 +36,7 @@ const Meals: React.FC<MealsProps> = ({ dayId }) => {
             });
             setMeals(response.data);
         } catch (error) {
-            console.error("Błąd przy pobieraniu posiłków:", error);
+            console.error("Error while fetching meals", error);
         }
     };
 
@@ -46,13 +49,14 @@ const Meals: React.FC<MealsProps> = ({ dayId }) => {
     };
 
     return (
+        <SnackbarProvider preventDuplicate autoHideDuration={3000}>
         <List>
             {meals.map((meal) => (
                 <Box key={meal.id}>
                     <ListItem onClick={() => handleToggleExpand(meal.id)}>
                         <ListItemText
-                            primary={`${meal.meal_type} - Kalorie: ${meal.calories}`}
-                            secondary={`Białko: ${meal.protein}, Węglowodany: ${meal.carbohydrates}, Tłuszcze: ${meal.fat}`}
+                            primary={`${meal.meal_type} - Calories: ${meal.calories}`}
+                            secondary={`Protein: ${meal.protein}, Carbohydrates: ${meal.carbohydrates}, Fat: ${meal.fat}`}
                         />
                     </ListItem>
                     <Collapse in={expandedMealId === meal.id} timeout="auto" unmountOnExit>
@@ -70,7 +74,7 @@ const Meals: React.FC<MealsProps> = ({ dayId }) => {
                                 onClick={addProduct}
                                 disabled={!productName.trim()}
                             >
-                                Dodaj produkt
+                                Add product
                             </Button>
                             <Products mealId={meal.id} refresh={refreshProducts} />
                         </Box>
@@ -78,6 +82,7 @@ const Meals: React.FC<MealsProps> = ({ dayId }) => {
                 </Box>
             ))}
         </List>
+        </SnackbarProvider>
     );
 };
 

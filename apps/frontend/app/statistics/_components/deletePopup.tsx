@@ -5,7 +5,7 @@ import axios from 'axios';
 type DeleteDialogProps = {
     open: boolean;
     onClose: ()=>void;
-    id:number
+    id:number|null
     fetchBodyStatistics: () => void;
 };
 
@@ -13,7 +13,6 @@ const ConfirmDeleteDialog: React.FC<DeleteDialogProps> = ({ open, onClose, id, f
     const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
     const handleConfirm = async () => {
-        console.log(id)
         await axios.delete(`${backendURL}body-stats/${id}`, {withCredentials: true})
         fetchBodyStatistics();
         onClose();

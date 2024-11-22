@@ -1,25 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 import { bodyStats } from './types';
 import axios from 'axios';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 type EditDialogProps = {
     open: boolean;
     onClose: ()=>void;
-    statistics: bodyStats;
+    id: number|null;
     fetchBodyStatistics: () => void;
 };
 
 
-const EditDialog : React.FC<EditDialogProps> = ({ open, onClose, statistics, fetchBodyStatistics }) => {
+const EditDialog : React.FC<EditDialogProps> = ({ open, onClose, id, fetchBodyStatistics }) => {
     const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const [formData, setFormData] = useState<bodyStats>({
-        id: statistics.id,
-        date: statistics.date,
-        weight: statistics.weight,
-        chest_circ: statistics.chest_circ,
-        waist_circ: statistics.waist_circ,
+        id: null,
+        date: new Date(),
+        weight: 0,
+        chest_circ: 0,
+        waist_circ: 0
         });
+    const [selectedDate, setSelectedDate] = useState<Dayjs|null>(dayjs());
+
+
+    const fetchOneBodyStat = async () => {
+      try{
+        const respone = await axios.get(`${backendURL}body-stats/${id}`, {withCredentials: true})
+        setFormData(respone.data)
+      }catch(error){
+        console.error(error)
+      }
+      
+    }
+
+    useEffect(()=>{
+      fetchOneBodyStat()
+    },[])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,8 +51,16 @@ const EditDialog : React.FC<EditDialogProps> = ({ open, onClose, statistics, fet
 
   const handleSave = async () => {
     try {
-        await axios.patch(`${backendURL}body-stats/${formData.id}`, formData, { withCredentials: true });
-        fetchBodyStatistics();  
+        let updatedData = {...formData}
+        
+        if(selectedDate){
+          const dateToSend = selectedDate.add(1,'hour').toDate()
+          updatedData.date = dateToSend
+        }
+
+        await axios.patch(`${backendURL}body-stats/${formData.id}`, updatedData, { withCredentials: true });
+        fetchBodyStatistics();
+        fetchOneBodyStat()
         onClose();  
       } catch (error) {
         console.error("Error saving updated data:", error);
@@ -71,15 +99,15 @@ const EditDialog : React.FC<EditDialogProps> = ({ open, onClose, statistics, fet
                 margin="normal"
                 type="number"
                 />
-            <TextField
-                label="Date"
-                name="date"
-                type="date"
-                value={formData.date}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']} >   
+                    <DatePicker 
+                    label="Callendar" 
+                    value={dayjs(formData.date)}
+                    onChange={(newValue)=> setSelectedDate(newValue)}
+                    />
+                  </DemoContainer>
+              </LocalizationProvider>
         </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">

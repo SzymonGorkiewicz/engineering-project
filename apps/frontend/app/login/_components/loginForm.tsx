@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
+  const [errorMessage, setErrorMessage] = useState<string|null>(null)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try{
@@ -31,10 +31,11 @@ const LoginPage: React.FC = () => {
         withCredentials:true
       })
       if (response.status===200){
+        setErrorMessage(null)
         router.push('/homepage')
       }
     }catch(error){
-      console.error('Error while logging in ', error)
+      setErrorMessage("Invalid credentials")
     }
    
   };
@@ -75,6 +76,11 @@ const LoginPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {errorMessage && (
+              <>
+                <p>{errorMessage}</p>
+              </>
+            )}
             <Typography variant="body1">
             Doesn&apost have an account?{' '}
             <Link href="/register" onClick={()=> router.push('/register')} underline="hover" color="primary">
