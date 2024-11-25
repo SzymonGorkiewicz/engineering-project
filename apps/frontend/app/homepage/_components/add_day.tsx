@@ -6,8 +6,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  Collapse,
   Container,
+  Card,
+  CardContent,
+  useTheme,
 } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -18,13 +20,28 @@ import dayjs, { Dayjs } from "dayjs";
 import Meals from "./get_meals";
 import { Day } from "./types";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
-import ClearIcon from "@mui/icons-material/Clear";
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  Legend,
+  Cell,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function AddDay() {
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [days, setDays] = useState<Day[]>([]);
-  const [expandedDayId, setExpandedDayId] = useState<number | null>(null);
+  const [selectedDay, setSelectedDay] = useState<Day | null>(null);
+  const theme = useTheme();
+  const [plotData, setPlotData] = useState([
+    { name: "Protein", value: 0 },
+    { name: "Fats", value: 0 },
+    { name: "Carbohydrates", value: 0 },
+  ]);
+
+  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
 
   const handleAddDay = async () => {
     if (selectedDate) {
@@ -63,15 +80,25 @@ export default function AddDay() {
         params: { range: 7 },
         withCredentials: true,
       });
-      setDays(response.data);
-      console.log(response.data);
+      setDays([...response.data]);
+      if (selectedDay) {
+        const updatedSelectedDay = response.data.find(
+          (day: Day) => day.id === selectedDay.id,
+        );
+        setSelectedDay(updatedSelectedDay || null);
+      }
     } catch (error) {
       console.error("Error while fetching days:", error);
     }
   };
 
-  const handleToggleExpand = (dayId: number) => {
-    setExpandedDayId(expandedDayId === dayId ? null : dayId);
+  const handleSelectDay = (day: Day) => {
+    setSelectedDay(day);
+    setPlotData([
+      { name: "Protein", value: day.total_protein },
+      { name: "Fats", value: day.total_fat },
+      { name: "Carbohydrates", value: day.total_carbohydrates },
+    ]);
   };
 
   const today = dayjs();
@@ -87,16 +114,53 @@ export default function AddDay() {
       <Container
         sx={{
           display: "flex",
+          flexDirection: "column",
+          gap: 4,
           border: 1,
           borderColor: "gray",
           borderRadius: 6,
-          padding: 5,
+          padding: 8,
+          minWidth: "90%",
+          scrollPadding: 0,
         }}
       >
+        <List
+          component={Box}
+          display={"grid"}
+          gridTemplateColumns="repeat(8, 1fr)"
+          gap={2}
+        >
+          {days.map((day) => (
+            <ListItem
+              key={day.id}
+              onClick={() => handleSelectDay(day)}
+              sx={{
+                border:
+                  selectedDay?.id === day.id
+                    ? `2px solid ${theme.palette.primary.main}`
+                    : "2px solid transparent",
+                borderRadius: "8px",
+                marginBottom: 1,
+                transition: "border-color 0.3s ease",
+              }}
+            >
+              <ListItemText
+                primary={`Date: ${dayjs(day.date).format("MM-DD-YYYY")}`}
+                secondary={`Calories: ${day.total_calories}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]}>
-            <Box display={"flex"} flexDirection={"row"} gap={10}>
-              <Box display={"flex"} flexDirection={"column"}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              width="100%"
+              marginTop={5}
+            >
+              <Box display="flex" flexDirection="column" gap={2} width={"15%"}>
                 <DatePicker
                   label="Callendar"
                   defaultValue={dayjs()}
@@ -109,41 +173,67 @@ export default function AddDay() {
                   Add Day
                 </Button>
               </Box>
-              <Box>
-                <Typography variant="h6">Days:</Typography>
-                <List>
-                  {days.map((day) => (
-                    <Box key={day.id}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <ListItem
-                          onClick={() => handleToggleExpand(day.id)}
-                          sx={{ cursor: "pointer" }}
+
+              {selectedDay && (
+                <>
+                  <Card
+                    component={Box}
+                    width={"55%"}
+                    sx={{
+                      backgroundColor: theme.palette.background.default,
+                      boxShadow: "none",
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6">
+                        Details for{" "}
+                        {dayjs(selectedDay.date).format("MM-DD-YYYY")}
+                      </Typography>
+                      <Typography>
+                        Total Calories: {selectedDay.total_calories}
+                      </Typography>
+                      <Typography>
+                        Protein: {selectedDay.total_protein}, Carbohydrates:{" "}
+                        {selectedDay.total_carbohydrates}, Fat:{" "}
+                        {selectedDay.total_fat}
+                      </Typography>
+                      <Meals dayId={selectedDay.id} fetchDays={fetchDays} />
+                    </CardContent>
+                  </Card>
+                  <Box
+                    width={"30%"}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    height={500}
+                  >
+                    <ResponsiveContainer width={"100%"} height={"100%"}>
+                      <PieChart width={600} height={600}>
+                        <Pie
+                          data={plotData}
+                          dataKey="value"
+                          cx="50%"
+                          cy="50%"
+                          label={({ name, value }) => `${name}: ${value}g`}
+                          fill="#8884d8"
+                          labelLine={true}
+                          isAnimationActive={true}
+                          animationDuration={800}
+                          animationBegin={0}
                         >
-                          <ListItemText
-                            primary={`Date: ${dayjs(day.date).format("MM-DD-YYYY")} - Calories: ${day.total_calories}`}
-                            secondary={`Protein: ${day.total_protein}, Carbohydrates: ${day.total_carbohydrates}, Fat: ${day.total_fat}`}
-                          />
-                        </ListItem>
-                        <ClearIcon />
-                      </Box>
-                      <Collapse
-                        in={expandedDayId === day.id}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        <Box ml={4}>
-                          <Meals dayId={day.id} fetchDays={fetchDays} />
-                        </Box>
-                      </Collapse>
-                    </Box>
-                  ))}
-                </List>
-              </Box>
+                          {plotData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip></Tooltip>
+                        <Legend></Legend>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </Box>
+                </>
+              )}
             </Box>
           </DemoContainer>
         </LocalizationProvider>

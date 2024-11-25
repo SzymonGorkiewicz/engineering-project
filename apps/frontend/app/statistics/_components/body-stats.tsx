@@ -83,7 +83,7 @@ const BodyStats: React.FC = () => {
 
   return (
     <>
-      <Container>
+      <Container sx={{ minWidth: "90%", border: 1, padding: 8 }}>
         <Box component={"form"} onSubmit={handleSubmit}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker

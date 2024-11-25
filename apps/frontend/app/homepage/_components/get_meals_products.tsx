@@ -10,7 +10,7 @@ import axios from "axios";
 import { Product } from "./types";
 import ClearIcon from "@mui/icons-material/Clear";
 type ProductsProps = {
-  mealId: number;
+  mealId: number | null;
   refresh: boolean;
   fetchMeals: () => void;
   fetchDays: () => void;
