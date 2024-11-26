@@ -51,7 +51,14 @@ const Products: React.FC<ProductsProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
     productId: number,
   ) => {
-    const newGramature = parseFloat(event.target.value);
+    const inputValue = event.target.value;
+    const newGramature = Number(inputValue);
+    //const newGramature = parseFloat(event.target.value);
+
+    if (isNaN(newGramature)) {
+      console.warn("Invalid gramature value:", inputValue);
+      return;
+    }
 
     setProducts((prevProducts) =>
       prevProducts.map((product) =>

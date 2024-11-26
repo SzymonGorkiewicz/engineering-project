@@ -35,6 +35,14 @@ jobs:
       - name: Install dependencies 
         run: pnpm install
         
+      - name: Run linter (Frontend)
+        working-directory: ./apps/frontend
+        run: pnpm run lint
+
+      - name: Run linter (Backend)
+        working-directory: ./apps/backend
+        run: pnpm run lint
+        
       - name: Run OWASP dependency check
         if: steps.owasp-cache.outputs.cache-hit != 'true'
         env:
@@ -56,14 +64,6 @@ jobs:
         with:
           name: dependency-check-report
           path: dependency-check-reports  
-
-      - name: Run linter (Frontend)
-        working-directory: ./apps/frontend
-        run: pnpm run lint
-
-      - name: Run linter (Backend)
-        working-directory: ./apps/backend
-        run: pnpm run lint
 
       - name: Run TypeScript check (Frontend)
         working-directory: ./apps/frontend
