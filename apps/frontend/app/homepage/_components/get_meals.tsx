@@ -25,6 +25,7 @@ const Meals: React.FC<MealsProps> = ({ dayId, fetchDays }) => {
   const [productName, setProductName] = useState<string>("");
   const [refreshProducts, setRefreshProducts] = useState<boolean>(false);
   const theme = useTheme();
+
   const addProduct = async () => {
     try {
       await axios.post(
@@ -54,7 +55,6 @@ const Meals: React.FC<MealsProps> = ({ dayId, fetchDays }) => {
           withCredentials: true,
         },
       );
-      console.log(response.data);
       setMeals(response.data);
     } catch (error) {
       console.error("Error while fetching meals", error);
@@ -81,7 +81,7 @@ const Meals: React.FC<MealsProps> = ({ dayId, fetchDays }) => {
                 cursor: "pointer",
                 border:
                   expandedMealId === meal.id
-                    ? "2px solid #1976d2"
+                    ? `2px solid ${theme.palette.primary.main}`
                     : "2px solid transparent",
                 backgroundColor: theme.palette.background.default,
               }}

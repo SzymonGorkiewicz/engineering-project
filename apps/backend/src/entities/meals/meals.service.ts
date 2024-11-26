@@ -10,6 +10,7 @@ export class MealsService {
   ) {}
 
   async findAll(id: number): Promise<Meal[]> {
+    //console.log('fecthowanie posiłków')
     return await this.mealRepository.find({
       where: { day: { id: id } },
       order: { id: 'ASC' },

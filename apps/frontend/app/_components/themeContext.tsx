@@ -27,6 +27,9 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({
             primary: {
               main: "#90caf9",
             },
+            secondary: {
+              main: "#90caf9",
+            },
             background: {
               default: "#121212",
               paper: "#1e1e1e",
@@ -39,7 +42,10 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({
         : {
             // LightMode
             primary: {
-              main: "#1976d2",
+              main: "#53599A",
+            },
+            secondary: {
+              main: "#AEECEF",
             },
             background: {
               default: "#f5f5f5",

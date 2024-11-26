@@ -13,7 +13,6 @@ export class DaysService {
   ) {}
 
   async create(createDayDto: CreateDayDto, userID: number): Promise<Day> {
-    console.log(userID);
     if (userID) {
       const day = this.dayRepository.create({
         user: { id: userID },
@@ -31,7 +30,7 @@ export class DaysService {
   }
 
   async findInRange(range: number, userID: number): Promise<Day[]> {
-    this.calculateTotalCalories(userID);
+    await this.calculateTotalCalories(userID);
     const today = new Date();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - range);
@@ -70,6 +69,10 @@ export class DaysService {
       day.total_protein = parseFloat(dayProtein.toFixed(1));
       day.total_carbohydrates = parseFloat(dayCarbohydrates.toFixed(1));
       day.total_fat = parseFloat(dayFat.toFixed(1));
+
+      // if (day.date.toLocaleString() === '2024-12-01'){
+      //   console.log(day)
+      // }
 
       await this.dayRepository.save(day);
     }

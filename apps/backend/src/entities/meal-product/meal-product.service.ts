@@ -66,20 +66,52 @@ export class MealProductService {
     meal.total_carbohydrates += newCarbohydrates;
     meal.total_fat += newFat;
 
-    // Zapisz Meal z nowymi wartościami
     await this.mealRepository.save(meal);
     console.log('gramatura');
-
-    // const updatedFields: Partial<MealProduct> = {};
-    // if (updateMealProductDto.gramature){
-    //   updatedFields.gramature = updateMealProductDto.gramature
-    // }
 
     await this.mealProductRepository.update(id, { gramature: newGramature });
     return this.mealProductRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    try {
+      const mealProduct = await this.mealProductRepository.findOne({
+        where: { id },
+        relations: ['meal', 'product'],
+      });
+
+      if (!mealProduct) {
+        throw new Error(`MealProduct with id ${id} not found`);
+      }
+
+      const caloriesToDeduct =
+        mealProduct.product.calories_per_100g * (mealProduct.gramature / 100);
+
+      const proteinToDeduct =
+        mealProduct.product.protein_per_100g * (mealProduct.gramature / 100);
+
+      const carbohydratesToDeduct =
+        mealProduct.product.carbohydrates_per_100g *
+        (mealProduct.gramature / 100);
+
+      const fatsToDeduct =
+        mealProduct.product.fat_per_100g * (mealProduct.gramature / 100);
+
+      const meal = mealProduct.meal;
+      //console.log("Posiłek przed usunieciem kalorii",meal)
+      meal.total_calories -= caloriesToDeduct;
+      meal.total_protein -= proteinToDeduct;
+      meal.total_carbohydrates -= carbohydratesToDeduct;
+      meal.total_fat -= fatsToDeduct;
+      //console.log("Posiłek po usunieciem kalorii",meal)
+
+      //console.log('zapis posiłku')
+      await this.mealRepository.save(meal);
+
+      await this.mealProductRepository.remove(mealProduct);
+    } catch (error) {
+      throw new Error('Failed to remove the product');
+    }
     return `This action removes a #${id} mealProduct`;
   }
 }

@@ -40,8 +40,8 @@ export default function AddDay() {
     { name: "Fats", value: 0 },
     { name: "Carbohydrates", value: 0 },
   ]);
-
-  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
+  // const [refreshPlot, setRefreshPlot] = useState(false)
+  const COLORS = ["#FF6384", "#FFCE56", "#36A2EB"];
 
   const handleAddDay = async () => {
     if (selectedDate) {
@@ -85,7 +85,16 @@ export default function AddDay() {
         const updatedSelectedDay = response.data.find(
           (day: Day) => day.id === selectedDay.id,
         );
+
         setSelectedDay(updatedSelectedDay || null);
+        setPlotData([
+          { name: "Protein", value: updatedSelectedDay.total_protein },
+          { name: "Fats", value: updatedSelectedDay.total_fat },
+          {
+            name: "Carbohydrates",
+            value: updatedSelectedDay.total_carbohydrates,
+          },
+        ]);
       }
     } catch (error) {
       console.error("Error while fetching days:", error);
@@ -116,11 +125,11 @@ export default function AddDay() {
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          border: 1,
-          borderColor: "gray",
+          border: 2,
+          borderColor: `${theme.palette.primary.main}`,
           borderRadius: 6,
           padding: 8,
-          minWidth: "90%",
+          minWidth: "95%",
           scrollPadding: 0,
         }}
       >
@@ -142,6 +151,7 @@ export default function AddDay() {
                 borderRadius: "8px",
                 marginBottom: 1,
                 transition: "border-color 0.3s ease",
+                cursor: "pointer",
               }}
             >
               <ListItemText
@@ -174,14 +184,15 @@ export default function AddDay() {
                 </Button>
               </Box>
 
-              {selectedDay && (
+              {selectedDay != null && (
                 <>
                   <Card
                     component={Box}
-                    width={"55%"}
+                    width={"45%"}
                     sx={{
                       backgroundColor: theme.palette.background.default,
                       boxShadow: "none",
+                      marginLeft: 3,
                     }}
                   >
                     <CardContent>
@@ -201,7 +212,7 @@ export default function AddDay() {
                     </CardContent>
                   </Card>
                   <Box
-                    width={"30%"}
+                    width={"40%"}
                     display={"flex"}
                     justifyContent={"center"}
                     height={500}

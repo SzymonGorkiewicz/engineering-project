@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   List,
   ListItem,
   ListItemText,
@@ -23,6 +29,8 @@ const Products: React.FC<ProductsProps> = ({
   fetchDays,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
   const fetchProducts = async () => {
     try {
@@ -33,7 +41,6 @@ const Products: React.FC<ProductsProps> = ({
         },
       );
       setProducts(response.data);
-      fetchDays();
     } catch (error) {
       console.error("Error while fetching the products:", error);
     }
@@ -53,7 +60,6 @@ const Products: React.FC<ProductsProps> = ({
   ) => {
     const inputValue = event.target.value;
     const newGramature = Number(inputValue);
-    //const newGramature = parseFloat(event.target.value);
 
     if (isNaN(newGramature)) {
       console.warn("Invalid gramature value:", inputValue);
@@ -80,8 +86,9 @@ const Products: React.FC<ProductsProps> = ({
           withCredentials: true,
         },
       );
-      fetchMeals();
+      fetchProducts();
       fetchDays();
+      fetchMeals();
     } catch (error) {
       console.error("Error while changing gramature:", error);
     }
@@ -92,31 +99,98 @@ const Products: React.FC<ProductsProps> = ({
     return parseFloat(caloriesCalculated.toFixed(1));
   };
 
+  const handleOpenDialog = (productId: number) => {
+    setProductToDelete(productId);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setProductToDelete(null);
+  };
+
+  const handleDeleteProduct = async () => {
+    if (productToDelete !== null) {
+      try {
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}meal-product/${productToDelete}`,
+          { withCredentials: true },
+        );
+        handleCloseDialog();
+        fetchProducts();
+        fetchDays();
+        fetchMeals();
+      } catch (error) {
+        console.error("Error while deleting product:", error);
+      }
+    }
+  };
+
   return (
-    <List>
-      {products.map((product) => (
-        <ListItem key={product.id}>
-          <ListItemText
-            primary={product.product.name}
-            secondary={`Calories: ${calculateProductCalories(product.product.calories_per_100g, product.gramature)}, Protein: ${calculateProductCalories(product.product.protein_per_100g, product.gramature)}, Carbohydrates: ${calculateProductCalories(product.product.carbohydrates_per_100g, product.gramature)}, Fat: ${calculateProductCalories(product.product.fat_per_100g, product.gramature)}`}
-          />
-          <TextField
-            value={product.gramature}
-            onBlur={() => handleBlur(product.id, product.gramature)}
-            variant="outlined"
-            type="number"
-            onChange={(e) =>
-              handleGramatureChange(
-                e as React.ChangeEvent<HTMLInputElement>,
-                product.id,
-              )
-            }
-          />
-          <Typography>Gramature</Typography>
-          <ClearIcon />
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {products.map((product) => (
+          <ListItem key={product.id}>
+            <ListItemText
+              primary={product.product.name}
+              secondary={`Calories: ${calculateProductCalories(product.product.calories_per_100g, product.gramature)}, Protein: ${calculateProductCalories(product.product.protein_per_100g, product.gramature)}, Carbohydrates: ${calculateProductCalories(product.product.carbohydrates_per_100g, product.gramature)}, Fat: ${calculateProductCalories(product.product.fat_per_100g, product.gramature)}`}
+            />
+            <Typography
+              sx={{
+                fontSize: "0.875rem",
+                fontWeight: "bold",
+                marginRight: 2,
+              }}
+            >
+              Gramature:{" "}
+            </Typography>
+            <TextField
+              value={product.gramature}
+              onBlur={() => handleBlur(product.id, product.gramature)}
+              variant="outlined"
+              type="number"
+              onChange={(e) =>
+                handleGramatureChange(
+                  e as React.ChangeEvent<HTMLInputElement>,
+                  product.id,
+                )
+              }
+              sx={{
+                width: 100,
+                marginRight: 2,
+              }}
+            />
+
+            <ClearIcon
+              onClick={() => handleOpenDialog(product.id)}
+              sx={{
+                fontSize: 25,
+              }}
+            />
+          </ListItem>
+        ))}
+      </List>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Delete Product</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this product?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteProduct}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

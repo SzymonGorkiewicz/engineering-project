@@ -38,18 +38,22 @@ const Navbar = () => {
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Link href="/homepage" passHref>
-            <Button color="primary">LifeTrack</Button>
-          </Link>
-          <Link href="/statistics" passHref>
-            <Button color="secondary" variant="contained">
-              statistics
+            <Button color="secondary" sx={{ marginRight: 3 }}>
+              LifeTrack
             </Button>
           </Link>
+          <Link href="/statistics" passHref>
+            <Button color="secondary">statistics</Button>
+          </Link>
         </Typography>
-        <IconButton color="inherit" onClick={toggleDarkMode}>
+        <IconButton
+          color="inherit"
+          onClick={toggleDarkMode}
+          sx={{ marginRight: 3 }}
+        >
           {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
-        <Button variant="contained" color="primary" onClick={handleLogout}>
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
           Logout
         </Button>
       </Toolbar>
