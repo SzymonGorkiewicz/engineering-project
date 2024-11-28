@@ -107,15 +107,15 @@ jobs:
         run: sleep 30  
 
       - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
-      run: |
-        psql -h localhost -U postgres -d engineering_project -c "INSERT INTO users (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
-      env:
-        PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO users (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      # - name: ZAP Scan
-      #   uses: zaproxy/action-af@v0.1.0
-      #   with:
-      #     plan: '.github/workflows/zap/plan.yaml'
+      - name: ZAP Scan
+        uses: zaproxy/action-af@v0.1.0
+        with:
+          plan: '.github/workflows/zap/plan.yaml'
 
       # - name: ZAP Scan
       #   uses: zaproxy/action-full-scan@v0.11.0
