@@ -116,7 +116,7 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO "user" (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
         
 
       - name: ZAP Scan
