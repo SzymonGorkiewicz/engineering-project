@@ -106,11 +106,18 @@ jobs:
       - name: Wait for applications to be ready
         run: sleep 30  
 
-      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
-        run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO user (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
+      - name: Check PostgreSQL Tables #wyswietlenie tabel w bazie danych
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          psql -h localhost -U postgres -d engineering_project -c "\dt"
+        
+      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO "user" (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
+        
 
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
