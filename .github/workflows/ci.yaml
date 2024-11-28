@@ -108,7 +108,7 @@ jobs:
 
       - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
         run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO users (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO user (name, username, password, email) VALUES ('Test User', 'zapuser', 'Hashedpassword1!', 'zap@example.com');"
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
 
