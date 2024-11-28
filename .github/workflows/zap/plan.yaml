@@ -49,3 +49,31 @@ env:                                   # The environment, mandatory
     failOnWarning: false               # If set exit on a warning
     continueOnFailure: false           # Continue running all jobs, even if one fails
     progressToStdout: true             # If set will write job progress to stdout
+
+jobs:
+- type: activeScan                   # The active scanner - this actively attacks the target so should only be used with permission
+  parameters:
+    context:                         # String: Name of the context to attack, default: first context
+    policy:                          # String: Name of the scan policy to be used, default: Default Policy
+    maxRuleDurationInMins:           # Int: The max time in minutes any individual rule will be allowed to run for, default: 0 unlimited
+    maxScanDurationInMins:
+- type: report                       # Report generation
+  parameters:
+    template:                        # String: The template id, default : traditional-html
+    reportDir: "/zap/wrk/"                     # String: The directory into which the report will be written
+    reportFile: "ZAP_DAST_SCAN"                     # String: The report file name pattern, default: {{yyyy-MM-dd}}-ZAP-Report-[[site]]
+    reportTitle: "DAST SCAN"                     # String: The report title
+    reportDescription: "DAST SCAN DESC"               # String: The report description
+    displayReport:                   # Boolean: Display the report when generated, default: false
+  risks:                             # List: The risks to include in this report, default all
+    - high
+    - medium
+    - low
+    - info
+  confidences:                       # List: The confidences to include in this report, default all
+    - high
+    - medium
+    - low
+    - falsepositive
+  sections:                          # List: The template sections to include in this report - see the relevant template, default all
+  sites:             
