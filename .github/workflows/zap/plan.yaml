@@ -13,13 +13,10 @@ env:                                   # The environment, mandatory
         method: form                        # String, one of 'manual', 'http', 'form', 'json' or 'script'
         parameters:                  # May include any required for scripts. All of the parameters support vars except for the port 
           hostname: "localhost"                    # String, only for 'http' authentication
-          port: 3001                        # Int, only for 'http' authentication
-          realm:                       # String, only for 'http' authentication
+          port: 3001                        # Int, only for 'http' authentication                     # String, only for 'http' authentication
           loginPageUrl: "http://localhost:3001/login"                # String, the login page URL to read prior to making the request, only for 'form' or 'json' authentication
           loginRequestUrl: "http://localhost:3000/auth/login"             # String, the login URL to request, only for 'form' or 'json' authentication
           loginRequestBody: '{"username":"${username}", "password":"${password}"}'            # String, the login request body - if not supplied a GET request will be used, only for 'form' or 'json' authentication
-          script:                      # String, path to script, only for 'script' authentication
-          scriptEngine:                # String, the name of the script engine to use, only for 'script' authentication
         verification:
           method: response                     # String, one of 'response', 'request', 'both', 'poll'
           loggedInRegex: '"message":\\s*"Logged in succesfully"'              # String, regex pattern for determining if logged in
@@ -38,9 +35,7 @@ env:                                   # The environment, mandatory
           scriptEngine:                # String, the name of the script engine to use, only for 'script' session management
       technology:
         exclude:                       # List of tech to exclude, as per https://www.zaproxy.org/techtags/ (just use last names)
-        include: JavaScript                      # List of tech to include, should only be used when targeting specific techs, the exclude takes precedence when configuring the context.
-      structure:
-        structuralParameters:          # List of names of structural parameters.
+        include: [JavaScript]                      # List of tech to include, should only be used when targeting specific techs, the exclude takes precedence when configuring the context.
       users:                           # List of one or more users available to use for authentication
       - name: zapUser                          # String, the name to be used by the jobs
         credentials:                   # List of user credentials - may include any required for scripts
