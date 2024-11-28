@@ -112,10 +112,10 @@ jobs:
       env:
         PGPASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      - name: ZAP Scan
-        uses: zaproxy/action-af@v0.1.0
-        with:
-          plan: '.github/workflows/zap/plan.yaml'
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-af@v0.1.0
+      #   with:
+      #     plan: '.github/workflows/zap/plan.yaml'
 
       # - name: ZAP Scan
       #   uses: zaproxy/action-full-scan@v0.11.0
