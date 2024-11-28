@@ -42,8 +42,8 @@ env:                                   # The environment, mandatory
           username: "zapuser"                   # String, the username to use when authenticating, vars supported
           password: "Hashedpassword1!"                    # String, the password to use when authenticating, vars supported
   vars:                                # List of 0 or more custom variables to be used throughout the config file
-    myVarOne: CustomConfigVarOne       # Can be used as ${myVarOne} anywhere throughout the config
-    myVarTwo: ${myVarOne}.VarTwo       # Can refer other vars    
+    username: "zapuser"       # Can be used as ${myVarOne} anywhere throughout the config
+    password: "Hashedpassword1!"       # Can refer other vars    
   parameters:
     failOnError: true                  # If set exit on an error         
     failOnWarning: false               # If set exit on a warning
