@@ -12,8 +12,8 @@ env:                                   # The environment, mandatory
       authentication:
         method: form                        # String, one of 'manual', 'http', 'form', 'json' or 'script'
         parameters:                  # May include any required for scripts. All of the parameters support vars except for the port 
-          hostname:                    # String, only for 'http' authentication
-          port:                        # Int, only for 'http' authentication
+          hostname: "localhost"                    # String, only for 'http' authentication
+          port: 3001                        # Int, only for 'http' authentication
           realm:                       # String, only for 'http' authentication
           loginPageUrl: "http://localhost:3001/login"                # String, the login page URL to read prior to making the request, only for 'form' or 'json' authentication
           loginRequestUrl: "http://localhost:3000/auth/login"             # String, the login URL to request, only for 'form' or 'json' authentication
