@@ -119,11 +119,19 @@ jobs:
       #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
         
 
-      - name: ZAP Scan
-        uses: zaproxy/action-af@v0.1.0
-        with:
-          plan: '.github/workflows/zap/plan.yaml'
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-af@v0.1.0
+      #   with:
+      #     plan: '.github/workflows/zap/plan.yaml'
 
+
+      - name: Run ZAP Automation Framework
+        uses: MisterIcy/zap-automation-framework
+        with:
+          config-dir: 'zap-config'
+          autorun-file: '.github/workflows/zap/plan.yaml'
+          reports-dir: 'reports'
+          json-file: 'report.json'
 
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
