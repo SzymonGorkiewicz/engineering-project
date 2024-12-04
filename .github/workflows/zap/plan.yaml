@@ -36,22 +36,22 @@ env:
 
 jobs:
   - type: addOns                       # Add-on management
-      parameters:
-        updateAddOns: true               # Update any add-ons that have new versions
-      install:                           # A list of non standard add-ons to install from the ZAP Marketplace
-      - ascanrules
-      - ascanrulesAlpha
-      - ascanrulesBeta
-      - pscanrulesBeta
-      - pscanrulesAlpha
-      - automation
-      - domxss
-      - graphql
-      - openapi
-      - reflect
-      - reports
-      - soap
-      - spiderAjax
+    parameters:
+      updateAddOns: true               # Update any add-ons that have new versions
+    install:                           # A list of non standard add-ons to install from the ZAP Marketplace
+    - ascanrules
+    - ascanrulesAlpha
+    - ascanrulesBeta
+    - pscanrulesBeta
+    - pscanrulesAlpha
+    - automation
+    - domxss
+    - graphql
+    - openapi
+    - reflect
+    - reports
+    - soap
+    - spiderAjax
   - type: activeScan                 
     parameters:
       policy: "Default Policy"                                        
