@@ -123,6 +123,8 @@ jobs:
         uses: zaproxy/action-af@v0.1.0
         with:
           plan: '.github/workflows/zap/plan.yaml'
+        env:
+          contextUrls: 'https://example.com'
 
 
       - name: Upload Zap report
