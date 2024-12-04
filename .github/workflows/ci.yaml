@@ -125,14 +125,14 @@ jobs:
           plan: '.github/workflows/zap/plan.yaml'
 
       - name: List files in /zap/wrk
-        run: ls -al /zap/wrk
+        run: ls -al 
 
       
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: /zap/wrk/ZAP_DAST_SCAN
+          path: ZAP_DAST_SCAN.html
 
       # - name: ZAP Scan
       #   uses: zaproxy/action-full-scan@v0.11.0
