@@ -1,12 +1,11 @@
 env:                                
-  contexts :                           
+  contexts:                           
     - name: ZapContext                  
       urls:     
         - "http://localhost:3001"                    
       includePaths:
         - "/homepage/"
-        - "/statistics/"                   
-      excludePaths:                  
+        - "/statistics/"                                    
       authentication:
         method: form                      
         parameters:                
@@ -18,19 +17,9 @@ env:
         verification:
           method: response                    
           loggedInRegex: '"message":\\s*"Logged in succesfully"'            
-          loggedOutRegex: '"message":\\s*"Logged out succesfully"'             
-          pollFrequency:              
-          pollUnits:                  
-          pollUrl:                    
-          pollPostData:               
-          pollAdditionalHeaders:      
-          - header:                   
-            value:                     
+          loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
       sessionManagement:
-        method: cookie                      
-        parameters:                    
-          script:                      
-          scriptEngine:               
+        method: cookie                                    
       technology:
         exclude:                      
         include: [JavaScript]                     
@@ -46,23 +35,24 @@ env:
     failOnError: true                       
     failOnWarning: false             
     continueOnFailure: false          
-    progressToStdout: true          
+    progressToStdout: true
+    logLevel: DEBUG          
 
 jobs:
 - type: activeScan                 
   parameters:
-    context:                       
-    policy:                         
-    maxRuleDurationInMins:          
-    maxScanDurationInMins:
+    context: "ZapContext"                       
+    policy: "Default Policy"                    
+    maxRuleDurationInMins: 5         
+    maxScanDurationInMins: 30
 - type: report                     
   parameters:
-    template:                        
+    template: "traditional-html"                       
     reportDir: "/zap/wrk/"                     
     reportFile: "ZAP_DAST_SCAN"                    
     reportTitle: "DAST SCAN"                    
     reportDescription: "DAST SCAN DESC"           
-    displayReport:                 
+    displayReport: true                
   risks:                          
     - high
     - medium
@@ -73,5 +63,7 @@ jobs:
     - medium
     - low
     - falsepositive
-  sections:                      
-  sites:             
+  sections:
+    - all                      
+  sites:
+    - all           
