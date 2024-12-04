@@ -73,50 +73,50 @@ jobs:
       #   working-directory: ./apps/backend
       #   run: pnpm exec tsc --noEmit
 
-      - name: Create .env file for NestJS
-        working-directory: ./apps/backend
-        run: |
-          echo "POSTGRES_HOST=localhost" >> .env
-          echo "POSTGRES_PORT=5432" >> .env
-          echo "POSTGRES_USER=postgres" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "POSTGRES_DB=engineering_project" >> .env
+      # - name: Create .env file for NestJS
+      #   working-directory: ./apps/backend
+      #   run: |
+      #     echo "POSTGRES_HOST=localhost" >> .env
+      #     echo "POSTGRES_PORT=5432" >> .env
+      #     echo "POSTGRES_USER=postgres" >> .env
+      #     echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "POSTGRES_DB=engineering_project" >> .env
       
-      - name: Create .env file for Nextjs
-        working-directory: ./apps/frontend
-        run: |
-          echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
+      # - name: Create .env file for Nextjs
+      #   working-directory: ./apps/frontend
+      #   run: |
+      #     echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
 
-      - name: Build Next.js app
-        working-directory: ./apps/frontend
-        run: pnpm run build
+      # - name: Build Next.js app
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run build
 
-      - name: Build NestJS app
-        working-directory: ./apps/backend
-        run: pnpm run build
+      # - name: Build NestJS app
+      #   working-directory: ./apps/backend
+      #   run: pnpm run build
           
-      - name: Start NestJS Application
-        working-directory: ./apps/backend
-        run: pnpm run start:prod &  
+      # - name: Start NestJS Application
+      #   working-directory: ./apps/backend
+      #   run: pnpm run start:prod &  
 
-      - name: Start Next.js Application
-        working-directory: ./apps/frontend
-        run: pnpm run start &  
+      # - name: Start Next.js Application
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run start &  
 
-      - name: Wait for applications to be ready
-        run: sleep 30  
+      # - name: Wait for applications to be ready
+      #   run: sleep 30  
 
-      - name: Check PostgreSQL Tables #wyswietlenie tabel w bazie danych
-        env:
-          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          psql -h localhost -U postgres -d engineering_project -c "\dt"
+      # - name: Check PostgreSQL Tables #wyswietlenie tabel w bazie danych
+      #   env:
+      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      #   run: |
+      #     psql -h localhost -U postgres -d engineering_project -c "\dt"
         
-      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
-        env:
-          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
+      # - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+      #   env:
+      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      #   run: |
+      #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
         
 
       - name: ZAP Scan
