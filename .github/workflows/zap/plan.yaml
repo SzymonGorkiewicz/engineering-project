@@ -1,8 +1,7 @@
 env:                                
   contexts:                           
     - name: ZapContext                  
-      urls: 
-        - https://example.com                    
+      url: https://example.com                    
       # includePaths:
       #   - "/homepage"
       #   - "/statistics"                                    
