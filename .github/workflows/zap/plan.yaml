@@ -1,79 +1,77 @@
-env:                                   # The environment, mandatory
-  contexts :                           # List of 1 or more contexts, mandatory
-    - name: ZapContext                  # Name to be used to refer to this context in other jobs, mandatory
+env:                                
+  contexts :                           
+    - name: ZapContext                  
       urls:     
-        - "http://localhost:3001"                       # A mandatory list of top level urls, everything under each url will be included
+        - "http://localhost:3001"                    
       includePaths:
-        - "/login/"
-        - "/register/"
         - "/homepage/"
-        - "/statistics/"                    # An optional list of regexes to include
-      excludePaths:                    # An optional list of regexes to exclude
+        - "/statistics/"                   
+      excludePaths:                  
       authentication:
-        method: form                        # String, one of 'manual', 'http', 'form', 'json' or 'script'
-        parameters:                  # May include any required for scripts. All of the parameters support vars except for the port 
-          hostname: "localhost"                    # String, only for 'http' authentication
-          port: 3001                        # Int, only for 'http' authentication                     # String, only for 'http' authentication
-          loginPageUrl: "http://localhost:3001/login"                # String, the login page URL to read prior to making the request, only for 'form' or 'json' authentication
-          loginRequestUrl: "http://localhost:3000/auth/login"             # String, the login URL to request, only for 'form' or 'json' authentication
-          loginRequestBody: '{"username":"${username}", "password":"${password}"}'            # String, the login request body - if not supplied a GET request will be used, only for 'form' or 'json' authentication
+        method: form                      
+        parameters:                
+          hostname: "localhost"                   
+          port: 3001                        
+          loginPageUrl: "http://localhost:3001/login"               
+          loginRequestUrl: "http://localhost:3000/auth/login"            
+          loginRequestBody: '{"username":"${username}", "password":"${password}"}'         
         verification:
-          method: response                     # String, one of 'response', 'request', 'both', 'poll'
-          loggedInRegex: '"message":\\s*"Logged in succesfully"'              # String, regex pattern for determining if logged in
-          loggedOutRegex: '"message":\\s*"Logged out succesfully"'              # String, regex pattern for determining if logged out
-          pollFrequency:               # Int, the poll frequency, only for 'poll' verification
-          pollUnits:                   # String, the poll units, one of 'requests', 'seconds', only for 'poll' verification
-          pollUrl:                     # String, the URL to poll, only for 'poll' verification
-          pollPostData:                # String, post dat to include in the poll, only for 'poll' verification
-          pollAdditionalHeaders:       # List of additional headers for poll request, only for 'poll' verification
-          - header:                    # The header name
-            value:                     # The header value
+          method: response                    
+          loggedInRegex: '"message":\\s*"Logged in succesfully"'            
+          loggedOutRegex: '"message":\\s*"Logged out succesfully"'             
+          pollFrequency:              
+          pollUnits:                  
+          pollUrl:                    
+          pollPostData:               
+          pollAdditionalHeaders:      
+          - header:                   
+            value:                     
       sessionManagement:
-        method: cookie                        # String, one of 'cookie', 'http', 'script'
-        parameters:                    # List of 0 or more parameters - may include any required for scripts
-          script:                      # String, path to script, only for 'script' session management
-          scriptEngine:                # String, the name of the script engine to use, only for 'script' session management
+        method: cookie                      
+        parameters:                    
+          script:                      
+          scriptEngine:               
       technology:
-        exclude:                       # List of tech to exclude, as per https://www.zaproxy.org/techtags/ (just use last names)
-        include: [JavaScript]                      # List of tech to include, should only be used when targeting specific techs, the exclude takes precedence when configuring the context.
-      users:                           # List of one or more users available to use for authentication
-      - name: zapUser                          # String, the name to be used by the jobs
-        credentials:                   # List of user credentials - may include any required for scripts
-          username: "zapuser"                   # String, the username to use when authenticating, vars supported
-          password: "Hashedpassword1!"                    # String, the password to use when authenticating, vars supported
-  vars:                                # List of 0 or more custom variables to be used throughout the config file
-    username: "zapuser"       # Can be used as ${myVarOne} anywhere throughout the config
-    password: "Hashedpassword1!"       # Can refer other vars    
+        exclude:                      
+        include: [JavaScript]                     
+      users:                        
+      - name: zapUser                         
+        credentials:                 
+          username: "zapuser"                  
+          password: "Hashedpassword1!"                   
+  vars:                             
+    username: "zapuser"      
+    password: "Hashedpassword1!"     
   parameters:
-    failOnError: true                  # If set exit on an error         
-    failOnWarning: false               # If set exit on a warning
-    continueOnFailure: false           # Continue running all jobs, even if one fails
-    progressToStdout: true             # If set will write job progress to stdout
+    failOnError: true                       
+    failOnWarning: false             
+    continueOnFailure: false          
+    progressToStdout: true          
 
 jobs:
-- type: activeScan                   # The active scanner - this actively attacks the target so should only be used with permission
+- type: activeScan                 
   parameters:
-    context:                         # String: Name of the context to attack, default: first context
-    policy:                          # String: Name of the scan policy to be used, default: Default Policy
-    maxRuleDurationInMins:           # Int: The max time in minutes any individual rule will be allowed to run for, default: 0 unlimited
+    context:                       
+    policy:                         
+    maxRuleDurationInMins:          
     maxScanDurationInMins:
-- type: report                       # Report generation
+- type: report                     
   parameters:
-    template:                        # String: The template id, default : traditional-html
-    reportDir: "/zap/wrk/"                     # String: The directory into which the report will be written
-    reportFile: "ZAP_DAST_SCAN"                     # String: The report file name pattern, default: {{yyyy-MM-dd}}-ZAP-Report-[[site]]
-    reportTitle: "DAST SCAN"                     # String: The report title
-    reportDescription: "DAST SCAN DESC"               # String: The report description
-    displayReport:                   # Boolean: Display the report when generated, default: false
-  risks:                             # List: The risks to include in this report, default all
+    template:                        
+    reportDir: "/zap/wrk/"                     
+    reportFile: "ZAP_DAST_SCAN"                    
+    reportTitle: "DAST SCAN"                    
+    reportDescription: "DAST SCAN DESC"           
+    displayReport:                 
+  risks:                          
     - high
     - medium
     - low
     - info
-  confidences:                       # List: The confidences to include in this report, default all
+  confidences:                     
     - high
     - medium
     - low
     - falsepositive
-  sections:                          # List: The template sections to include in this report - see the relevant template, default all
+  sections:                      
   sites:             
