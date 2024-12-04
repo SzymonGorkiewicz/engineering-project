@@ -2,29 +2,29 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls:     
-        - "http://localhost:3001"                    
-      includePaths:
-        - "/homepage/"
-        - "/statistics/"                                    
-      authentication:
-        method: json                      
-        parameters:                                                     
-          loginRequestUrl: "http://localhost:3000/auth/login"            
-          loginRequestBody: '{"username":"${username}", "password":"${password}"}'
-          # loginPageUrl: "http://localhost:3001/login"          
-        verification:
-          method: response                    
-          loggedInRegex: '"message":\\s*"Logged in succesfully"'            
-          loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
-      sessionManagement:
-        method: cookie                                    
-      technology:                     
-        include: [JavaScript]                     
-      # users:                        
-      # - name: zapUser                         
-      #   credentials:                 
-      #     username: "zapuser"                  
-      #     password: "Hashedpassword1!"                   
+        - "https://example.com"                    
+      # includePaths:
+      #   - "/homepage"
+      #   - "/statistics"                                    
+      # authentication:
+      #   method: json                      
+      #   parameters:                                                     
+      #     loginRequestUrl: "http://localhost:3000/auth/login"            
+      #     loginRequestBody: '{"username":"${username}", "password":"${password}"}'
+      #     # loginPageUrl: "http://localhost:3001/login"          
+      #   verification:
+      #     method: response                    
+      #     loggedInRegex: '"message":\\s*"Logged in succesfully"'            
+      #     loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
+      # sessionManagement:
+      #   method: cookie                                    
+      # technology:                     
+      #   include: [JavaScript]                     
+      users:                        
+      - name: zapUser                         
+        credentials:                 
+          username: "zapuser"                  
+          password: "Hashedpassword1!"                   
   vars:                             
     username: "zapuser"      
     password: "Hashedpassword1!"     
@@ -37,8 +37,7 @@ env:
 jobs:
 - type: activeScan                 
   parameters:
-    context: "ZapContext"                       
-    policy: "Default Policy"                    
+    context: "ZapContext"                                        
     maxRuleDurationInMins: 5         
     maxScanDurationInMins: 30
 - type: report                     
