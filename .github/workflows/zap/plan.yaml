@@ -20,14 +20,14 @@ env:
       #   method: cookie                                    
       # technology:                     
       #   include: [JavaScript]                     
-      users:                        
-      - name: zapUser                         
-        credentials:                 
-          username: "zapuser"                  
-          password: "Hashedpassword1!"                   
-  vars:                             
-    username: "zapuser"      
-    password: "Hashedpassword1!"     
+  #     users:                        
+  #     - name: zapUser                         
+  #       credentials:                 
+  #         username: "zapuser"                  
+  #         password: "Hashedpassword1!"                   
+  # vars:                             
+  #   username: "zapuser"      
+  #   password: "Hashedpassword1!"     
   parameters:
     failOnError: true                       
     failOnWarning: false             
@@ -37,7 +37,8 @@ env:
 jobs:
 - type: activeScan                 
   parameters:
-    context: "ZapContext"                                        
+    context: "ZapContext"
+    policy: "Default Policy"                                        
     maxRuleDurationInMins: 5         
     maxScanDurationInMins: 30
 - type: report                     
