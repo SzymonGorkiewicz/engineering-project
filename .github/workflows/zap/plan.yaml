@@ -7,27 +7,24 @@ env:
         - "/homepage/"
         - "/statistics/"                                    
       authentication:
-        method: form                      
-        parameters:                
-          hostname: "localhost"                   
-          port: 3001                        
-          loginPageUrl: "http://localhost:3001/login"               
+        method: json                      
+        parameters:                                                     
           loginRequestUrl: "http://localhost:3000/auth/login"            
-          loginRequestBody: '{"username":"${username}", "password":"${password}"}'         
+          loginRequestBody: '{"username":"${username}", "password":"${password}"}'
+          # loginPageUrl: "http://localhost:3001/login"          
         verification:
           method: response                    
           loggedInRegex: '"message":\\s*"Logged in succesfully"'            
           loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
       sessionManagement:
         method: cookie                                    
-      technology:
-        exclude:                      
+      technology:                     
         include: [JavaScript]                     
-      users:                        
-      - name: zapUser                         
-        credentials:                 
-          username: "zapuser"                  
-          password: "Hashedpassword1!"                   
+      # users:                        
+      # - name: zapUser                         
+      #   credentials:                 
+      #     username: "zapuser"                  
+      #     password: "Hashedpassword1!"                   
   vars:                             
     username: "zapuser"      
     password: "Hashedpassword1!"     
@@ -35,8 +32,7 @@ env:
     failOnError: true                       
     failOnWarning: false             
     continueOnFailure: false          
-    progressToStdout: true
-    logLevel: DEBUG          
+    progressToStdout: true       
 
 jobs:
 - type: activeScan                 
@@ -46,24 +42,11 @@ jobs:
     maxRuleDurationInMins: 5         
     maxScanDurationInMins: 30
 - type: report                     
-  parameters:
-    template: "traditional-html"                       
+  parameters:                     
     reportDir: "/zap/wrk/"                     
     reportFile: "ZAP_DAST_SCAN"                    
     reportTitle: "DAST SCAN"                    
     reportDescription: "DAST SCAN DESC"           
     displayReport: true                
-  risks:                          
-    - high
-    - medium
-    - low
-    - info
-  confidences:                     
-    - high
-    - medium
-    - low
-    - falsepositive
-  sections:
-    - all                      
-  sites:
-    - all           
+
+       
