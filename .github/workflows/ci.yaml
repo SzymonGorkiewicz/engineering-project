@@ -81,6 +81,10 @@ jobs:
           echo "POSTGRES_USER=postgres" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "POSTGRES_DB=engineering_project" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "API_KEY=${{ secrets.HEROKU_FOOD_API_KEY }}" >> .env
+          echo "FOOD_API_URL: ${{ secrets.HEROKU_FOOD_API_URL }}" >> .env
       
       - name: Create .env file for Nextjs
         working-directory: ./apps/frontend
@@ -103,7 +107,6 @@ jobs:
         working-directory: ./apps/frontend
         run: |
           pnpm run start &
-          pnpm wait-on http://localhost:3001 
 
       # - name: Wait for applications to be ready
       #   run: sleep 30  
