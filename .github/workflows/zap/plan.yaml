@@ -3,9 +3,9 @@ env:
     - name: ZapContext                  
       urls: 
         - http://localhost:3001                   
-      # includePaths:
-      #   - "/homepage"
-      #   - "/statistics"                                    
+      includePaths:
+        - /login
+        # - "/statistics"                                    
       # authentication:
       #   method: json                      
       #   parameters:                                                     
@@ -41,7 +41,8 @@ jobs:
       maxRuleDurationInMins: 5         
       maxScanDurationInMins: 30
   - type: report                     
-    parameters:                                         
+    parameters:
+      reportDir: "/zap/wrk"                                         
       reportFile: "ZAP_DAST_SCAN"                    
       reportTitle: "DAST SCAN"                    
       reportDescription: "DAST SCAN DESC"           
