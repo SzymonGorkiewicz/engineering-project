@@ -2,13 +2,12 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001/homepage
-        - http://localhost:3001/statistics                    
-      # includePaths:
-      #   - "/homepage"
-      #   - "/statistics"
-      # excludePaths:
-      #   - "/register"                                    
+        - http://localhost:3001                    
+      includePaths:
+        - "/homepage"
+        - "/statistics"
+      excludePaths:
+        - "/register"                                   
       authentication:
         method: json                      
         parameters:                                                     
