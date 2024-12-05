@@ -136,7 +136,7 @@ jobs:
       - name: Prepare raport
         run: |
           mkdir zap_raport
-          cp ZAP_DAST_SCAN zap_raport/
+          cp -r ZAP_DAST_SCAN zap_raport/
           cp ZAP_DAST_SCAN.html zap_raport/
 
       - name: Upload Zap report
