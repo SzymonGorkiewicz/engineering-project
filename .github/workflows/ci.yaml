@@ -122,16 +122,11 @@ jobs:
       #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
-      - name: CHeck for frontend endpoint
-        run: curl http://localhost:3001/login        
 
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
         with:
           plan: '.github/workflows/zap/plan.yaml'
-
-      - name: Check for report
-        run: ls -a
 
       - name: Prepare raport
         run: |
@@ -139,19 +134,12 @@ jobs:
           cp -r ZAP_DAST_SCAN zap_raport/
           cp ZAP_DAST_SCAN.html zap_raport/
 
-      - name: Upload Zap report
+      - name: Upload Zap raport
         uses: actions/upload-artifact@v4
         with:
-          name: zap-report
+          name: zap-raport
           path: zap_raport
       
-
-      # - name: ZAP Scan
-      #   uses: zaproxy/action-full-scan@v0.11.0
-      #   with:
-      #     target: 'http://localhost:3001/register'
-      #     allow_issue_writing: false
-      #     cmd_options: '-j -J report_json.json -w report_md.md -r report_html.html -z "-config api.disablekey=true -config spider.maxDuration-120 -config spider.maxDepth=3 -config ajaxSpider.maxDepth=3"'
 
 
       
