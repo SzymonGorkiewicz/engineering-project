@@ -37,35 +37,35 @@ env:
 
 jobs:
   - type: spiderAjax
-  parameters:
-    context: "ZapContext"                # Nazwa kontekstu, który chcesz spiderować
-    user: ""                             # Opcjonalny użytkownik, jeśli wymagane jest uwierzytelnienie
-    url: "http://localhost:3001"         # Adres URL, od którego zaczyna się spidering
-    maxDuration: 10                      # Maksymalny czas trwania spideringu w minutach
-    maxCrawlDepth: 5                     # Maksymalna głębokość crawlowania
-    numberOfBrowsers: 1                  # Liczba przeglądarek do użycia
-    runOnlyIfModern: false               # Czy uruchamiać tylko dla "nowoczesnych aplikacji"
-    inScopeOnly: true                    # Ignorowanie URLi poza zakresem kontekstu
-    browserId: "firefox-headless"        # Przeglądarka do użycia
-    clickDefaultElems: true              # Klikanie tylko domyślnych elementów
-    clickElemsOnce: true                 # Klikanie każdego elementu tylko raz
-    eventWait: 1000                      # Czas oczekiwania po zdarzeniu (ms)
-    maxCrawlStates: 100                  # Maksymalna liczba stanów crawlowania
-    randomInputs: true                   # Wprowadzanie losowych danych do inputów
-    reloadWait: 1000                     # Czas oczekiwania po załadowaniu strony (ms)
-    excludedElements:                    # Lista elementów do wykluczenia
-      - description: "Logout Button"
-        element: "button"
-        attributeName: "aria-label"
-        attributeValue: "Logout"
+    parameters:
+      context: "ZapContext"                # Nazwa kontekstu, który chcesz spiderować
+      user: ""                             # Opcjonalny użytkownik, jeśli wymagane jest uwierzytelnienie
+      url: "http://localhost:3001"         # Adres URL, od którego zaczyna się spidering
+      maxDuration: 10                      # Maksymalny czas trwania spideringu w minutach
+      maxCrawlDepth: 5                     # Maksymalna głębokość crawlowania
+      numberOfBrowsers: 1                  # Liczba przeglądarek do użycia
+      runOnlyIfModern: false               # Czy uruchamiać tylko dla "nowoczesnych aplikacji"
+      inScopeOnly: true                    # Ignorowanie URLi poza zakresem kontekstu
+      browserId: "firefox-headless"        # Przeglądarka do użycia
+      clickDefaultElems: true              # Klikanie tylko domyślnych elementów
+      clickElemsOnce: true                 # Klikanie każdego elementu tylko raz
+      eventWait: 1000                      # Czas oczekiwania po zdarzeniu (ms)
+      maxCrawlStates: 100                  # Maksymalna liczba stanów crawlowania
+      randomInputs: true                   # Wprowadzanie losowych danych do inputów
+      reloadWait: 1000                     # Czas oczekiwania po załadowaniu strony (ms)
+      excludedElements:                    # Lista elementów do wykluczenia
+        - description: "Logout Button"
+          element: "button"
+          attributeName: "aria-label"
+          attributeValue: "Logout"
 
-  tests:
-    - name: 'At least 100 URLs found'           # Test, aby upewnić się, że znaleziono odpowiednią liczbę URLi
-      type: 'stats'
-      statistic: 'spiderAjax.urls.added'
-      operator: '>='
-      value: 1
-      onFail: 'info'
+    tests:
+      - name: 'At least 100 URLs found'           # Test, aby upewnić się, że znaleziono odpowiednią liczbę URLi
+        type: 'stats'
+        statistic: 'spiderAjax.urls.added'
+        operator: '>='
+        value: 1
+        onFail: 'info'
   - type: activeScan                 
     parameters:
       policy: "Default Policy"                                        
