@@ -2,9 +2,8 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001                    
+        - http://localhost:3001/homepage                    
       includePaths:
-        - "/homepage"
         - "/statistics"
       excludePaths:
         - "/register"                                   
@@ -41,17 +40,16 @@ jobs:
     parameters:
       context: "ZapContext"                     
       maxDuration: 10                     
-      maxCrawlDepth: 5                
+      maxCrawlDepth: 7                
       numberOfBrowsers: 1                
       runOnlyIfModern: false           
       inScopeOnly: true              
       browserId: "firefox-headless"     
       clickDefaultElems: true          
       clickElemsOnce: true              
-      eventWait: 1000                
-      maxCrawlStates: 100                
+      eventWait: 2000                               
       randomInputs: true               
-      reloadWait: 1000
+      reloadWait: 5000
       elements:
       - "button"
       - "input"
