@@ -4,28 +4,29 @@ env:
       urls: 
         - http://localhost:3001                   
       includePaths:
-        - /login
-        - /register
-        # - "/statistics"                                    
-      # authentication:
-      #   method: json                      
-      #   parameters:                                                     
-      #     loginRequestUrl: "http://localhost:3000/auth/login"            
-      #     loginRequestBody: '{"username":"${username}", "password":"${password}"}'
-      #     # loginPageUrl: "http://localhost:3001/login"          
-      #   verification:
-      #     method: response                    
-      #     loggedInRegex: '"message":\\s*"Logged in succesfully"'            
-      #     loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
-      # sessionManagement:
-      #   method: cookie                                    
-      # technology:                     
-      #   include: [JavaScript]                     
-      # users:                        
-      # - name: zapUser                         
-      #   credentials:                 
-      #     username: "zapuser"                  
-      #     password: "Hashedpassword1!"                   
+        - "/homepage"
+        - "/statistics"
+      excludePaths:
+        - "/register"                                    
+      authentication:
+        method: json                      
+        parameters:                                                     
+          loginRequestUrl: "http://localhost:3000/auth/login"            
+          loginRequestBody: '{"username":"${username}", "password":"${password}"}'
+          loginPageUrl: "http://localhost:3001/login"          
+        verification:
+          method: response                    
+          loggedInRegex: '"message":\\s*"Logged in succesfully"'            
+          loggedOutRegex: '"message":\\s*"Logged out succesfully"'                                 
+      sessionManagement:
+        method: cookie                                    
+      technology:                     
+        include: [JavaScript]                     
+      users:                        
+      - name: zapUser                         
+        credentials:                 
+          username: "zapuser"                  
+          password: "Hashedpassword1!"                   
   vars:                             
     username: "zapuser"      
     password: "Hashedpassword1!"     
@@ -40,7 +41,7 @@ jobs:
     parameters:
       context: "ZapContext"                # Nazwa kontekstu, który chcesz spiderować
       user: ""                             # Opcjonalny użytkownik, jeśli wymagane jest uwierzytelnienie
-      url: "http://localhost:3001"         # Adres URL, od którego zaczyna się spidering
+      url: "http://localhost:3001/homepage"         # Adres URL, od którego zaczyna się spidering
       maxDuration: 10                      # Maksymalny czas trwania spideringu w minutach
       maxCrawlDepth: 5                     # Maksymalna głębokość crawlowania
       numberOfBrowsers: 1                  # Liczba przeglądarek do użycia
@@ -73,10 +74,20 @@ jobs:
       maxScanDurationInMins: 30
   - type: report                     
     parameters:
+      template: modern
       reportDir: "/zap/wrk"                                         
       reportFile: "ZAP_DAST_SCAN"                    
       reportTitle: "DAST SCAN"                    
       reportDescription: "DAST SCAN DESC"           
-      displayReport: true                
+      displayReport: true
+      sections:
+        - chart         
+        - alertcount     
+        - instancecount  
+        - passingrules   
+        - alertdetails   
+        - statistics     
+        - params         
+      theme: "corporate"                 
 
        
