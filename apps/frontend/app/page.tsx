@@ -1,3 +1,8 @@
 export default function Home() {
-  return <p>App works</p>;
+  return (
+    <>
+      <a href="/homepage">homepage</a>
+      <a href="/statistics">statisctisc</a>
+    </>
+  );
 }

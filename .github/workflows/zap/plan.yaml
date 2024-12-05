@@ -39,8 +39,7 @@ env:
 jobs:
   - type: spiderAjax
     parameters:
-      context: "ZapContext"              
-      #url: "http://localhost:3001/homepage"         
+      context: "ZapContext"                     
       maxDuration: 10                     
       maxCrawlDepth: 5                
       numberOfBrowsers: 1                
