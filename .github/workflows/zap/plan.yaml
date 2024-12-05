@@ -80,14 +80,6 @@ jobs:
       reportTitle: "DAST SCAN"                    
       reportDescription: "DAST SCAN DESC"           
       displayReport: true
-      sections:
-        - chart         
-        - alertcount     
-        - instancecount  
-        - passingrules   
-        - alertdetails   
-        - statistics     
-        - params         
-      theme: "corporate"                 
+                     
 
        
