@@ -101,7 +101,9 @@ jobs:
 
       - name: Start Next.js Application
         working-directory: ./apps/frontend
-        run: pnpm run start &  
+        run: |
+          pnpm run start &
+          pnpm wait-on http://localhost:3001 
 
       # - name: Wait for applications to be ready
       #   run: sleep 30  
@@ -117,7 +119,8 @@ jobs:
       #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
-        
+      - name: CHeck for frontend endpoint
+        run: curl http://localhost:3001/login        
 
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
@@ -135,11 +138,15 @@ jobs:
       #       ghcr.io/zaproxy/zaproxy:stable \
       #       zap.sh -cmd -autorun /zap/wrk/.github/workflows/zap/plan.yaml
 
+      - name: Display ZAP logs
+        run: cat *.log
+
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
           path: ZAP_DAST_SCAN.html
+      
 
       # - name: ZAP Scan
       #   uses: zaproxy/action-full-scan@v0.11.0
