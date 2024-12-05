@@ -141,9 +141,6 @@ jobs:
       #       ghcr.io/zaproxy/zaproxy:stable \
       #       zap.sh -cmd -autorun /zap/wrk/.github/workflows/zap/plan.yaml
 
-      - name: Display ZAP logs
-        run: cat *.log
-
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
         with:
