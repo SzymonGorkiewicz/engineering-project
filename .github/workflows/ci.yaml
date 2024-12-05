@@ -73,35 +73,35 @@ jobs:
       #   working-directory: ./apps/backend
       #   run: pnpm exec tsc --noEmit
 
-      # - name: Create .env file for NestJS
-      #   working-directory: ./apps/backend
-      #   run: |
-      #     echo "POSTGRES_HOST=localhost" >> .env
-      #     echo "POSTGRES_PORT=5432" >> .env
-      #     echo "POSTGRES_USER=postgres" >> .env
-      #     echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-      #     echo "POSTGRES_DB=engineering_project" >> .env
+      - name: Create .env file for NestJS
+        working-directory: ./apps/backend
+        run: |
+          echo "POSTGRES_HOST=localhost" >> .env
+          echo "POSTGRES_PORT=5432" >> .env
+          echo "POSTGRES_USER=postgres" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=engineering_project" >> .env
       
-      # - name: Create .env file for Nextjs
-      #   working-directory: ./apps/frontend
-      #   run: |
-      #     echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
+      - name: Create .env file for Nextjs
+        working-directory: ./apps/frontend
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
 
-      # - name: Build Next.js app
-      #   working-directory: ./apps/frontend
-      #   run: pnpm run build
+      - name: Build Next.js app
+        working-directory: ./apps/frontend
+        run: pnpm run build
 
-      # - name: Build NestJS app
-      #   working-directory: ./apps/backend
-      #   run: pnpm run build
+      - name: Build NestJS app
+        working-directory: ./apps/backend
+        run: pnpm run build
           
-      # - name: Start NestJS Application
-      #   working-directory: ./apps/backend
-      #   run: pnpm run start:prod &  
+      - name: Start NestJS Application
+        working-directory: ./apps/backend
+        run: pnpm run start:prod &  
 
-      # - name: Start Next.js Application
-      #   working-directory: ./apps/frontend
-      #   run: pnpm run start &  
+      - name: Start Next.js Application
+        working-directory: ./apps/frontend
+        run: pnpm run start &  
 
       # - name: Wait for applications to be ready
       #   run: sleep 30  

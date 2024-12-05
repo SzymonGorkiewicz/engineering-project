@@ -2,7 +2,7 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - https://example.com                    
+        - http://localhost:3001                   
       # includePaths:
       #   - "/homepage"
       #   - "/statistics"                                    
@@ -20,14 +20,14 @@ env:
       #   method: cookie                                    
       # technology:                     
       #   include: [JavaScript]                     
-  #     users:                        
-  #     - name: zapUser                         
-  #       credentials:                 
-  #         username: "zapuser"                  
-  #         password: "Hashedpassword1!"                   
-  # vars:                             
-  #   username: "zapuser"      
-  #   password: "Hashedpassword1!"     
+      # users:                        
+      # - name: zapUser                         
+      #   credentials:                 
+      #     username: "zapuser"                  
+      #     password: "Hashedpassword1!"                   
+  vars:                             
+    username: "zapuser"      
+    password: "Hashedpassword1!"     
   parameters:
     failOnError: true                       
     failOnWarning: false             
@@ -35,23 +35,6 @@ env:
     progressToStdout: true       
 
 jobs:
-  - type: addOns                       # Add-on management
-    parameters:
-      updateAddOns: true               # Update any add-ons that have new versions
-    install:                           # A list of non standard add-ons to install from the ZAP Marketplace
-    - ascanrules
-    - ascanrulesAlpha
-    - ascanrulesBeta
-    - pscanrulesBeta
-    - pscanrulesAlpha
-    - automation
-    - domxss
-    - graphql
-    - openapi
-    - reflect
-    - reports
-    - soap
-    - spiderAjax
   - type: activeScan                 
     parameters:
       policy: "Default Policy"                                        
