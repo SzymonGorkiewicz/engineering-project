@@ -133,11 +133,17 @@ jobs:
       - name: Check for report
         run: ls -a
 
+      - name: Prepare raport
+        run: |
+          mkdir zap_raport
+          cp ZAP_DAST_SCAN zap_raport/
+          cp ZAP_DAST_SCAN.html zap_raport/
+
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: ZAP_DAST_SCAN, ZAP_DAST_SCAN.html
+          path: zap_raport
       
 
       # - name: ZAP Scan
