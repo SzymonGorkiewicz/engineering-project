@@ -129,17 +129,9 @@ jobs:
         uses: zaproxy/action-af@v0.1.0
         with:
           plan: '.github/workflows/zap/plan.yaml'
-      # - name: Pull ZAP Docker image
-      #   run: |
-      #     docker pull ghcr.io/zaproxy/zaproxy:stable
-
-      # - name: Run ZAP Scan
-      #   run: |
-      #     docker run \
-      #       -v ${{ github.workspace }}:/zap/wrk:rw \
-      #       --network=host \
-      #       ghcr.io/zaproxy/zaproxy:stable \
-      #       zap.sh -cmd -autorun /zap/wrk/.github/workflows/zap/plan.yaml
+          
+      - name: Check for report
+        run: ls -a
 
       - name: Upload Zap report
         uses: actions/upload-artifact@v4
