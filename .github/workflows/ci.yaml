@@ -129,7 +129,7 @@ jobs:
         uses: zaproxy/action-af@v0.1.0
         with:
           plan: '.github/workflows/zap/plan.yaml'
-          
+
       - name: Check for report
         run: ls -a
 
@@ -137,7 +137,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: ZAP_DAST_SCAN.html
+          path: ZAP_DAST_SCAN
       
 
       # - name: ZAP Scan
