@@ -117,11 +117,34 @@ jobs:
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "\dt"
         
-      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+      # - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+      #   env:
+      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      #   run: |
+      #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
+
+      - name: Hash password and save to file
+        run: |
+          echo "const bcrypt = require('bcrypt');" > hash.js
+          echo "const fs = require('fs');" >> hash.js
+          echo "bcrypt.hash('Hashedpassword1!', 10, (err, hash) => {" >> hash.js
+          echo "  if (err) { console.error(err); process.exit(1); }" >> hash.js
+          echo "  fs.writeFileSync('hashed_password.txt', hash);" >> hash.js
+          echo "});" >> hash.js
+          node hash.js
+          echo "Password hashed and saved to hashed_password.txt"
+
+      - name: Show hashed password (debugging only, remove in production)
+        run: cat hashed_password.txt
+
+      - name: Insert hashed password into database
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
+          HASH=$(cat hashed_password.txt)
+          psql -h localhost -U postgres -d engineering_project -c \
+          "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$HASH', 'zap@example.com');"
+
 
       - name: Send POST request to login endpoint
         run: |
