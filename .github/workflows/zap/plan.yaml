@@ -2,16 +2,16 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001
-        - http://localhost:3000
-      includePaths:
-        - "/auth/check-auth"
-        - "/homepage"
-        - "/statistics"                
-      excludePaths:
-        - "/register"
-        - "/login"
-        - "/logout"                                  
+        #- http://localhost:3001
+        - "http://localhost:3001/homepage"
+      # includePaths:
+      #   - "http://localhost:3000/auth/check-auth"
+      #   - "http://localhost:3001/homepage"
+      #   - "http://localhost:3001/statistics"                
+      # excludePaths:
+      #   - "http://localhost:3001/register"
+      #   - "http://localhost:3001/login"
+      #   - "http://localhost:3000/logout"                                  
       authentication:
         method: json                      
         parameters:                                                     
@@ -41,7 +41,7 @@ jobs:
   - type: spiderAjax
     parameters:
       context: "ZapContext"
-      url: http://localhost:3001
+      url: http://localhost:3001/homepage
       user: zapUser                   
       maxDuration: 10                     
       maxCrawlDepth: 7                
