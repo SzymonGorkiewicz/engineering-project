@@ -37,7 +37,7 @@ jobs:
   - type: spiderAjax
     parameters:
       context: "ZapContext"
-      url: http://localhost:3001/homepage
+      url: http://localhost:3001
       user: zapUser                   
       maxDuration: 10                     
       maxCrawlDepth: 7                
