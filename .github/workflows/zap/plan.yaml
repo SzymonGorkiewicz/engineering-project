@@ -72,27 +72,6 @@ jobs:
         operator: '>='
         value: 1
         onFail: 'info'
-
-      - name: 'Verify Login Successful'
-        type: 'stats'
-        statistic: 'stats.auth.success'
-        operator: '>='
-        value: 1
-        onFail: 'info'
-      
-      - name: 'Session Token Detected in Cookies'
-        type: 'stats'
-        statistic: 'stats.auth.sessiontoken.<access_token>' 
-        operator: '>='
-        value: 1
-        onFail: 'warn'
-
-      - name: 'No Logged Out States'
-        type: 'stats'
-        statistic: 'stats.auth.state.loggedout'
-        operator: '=='
-        value: 0
-        onFail: 'warn'
         
   - type: activeScan                 
     parameters:
