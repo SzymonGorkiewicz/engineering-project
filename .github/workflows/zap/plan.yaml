@@ -2,7 +2,7 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001.*
+        - http://localhost:3001
         - http://localhost:3000/auth/check-auth                   
       excludePaths:
         - /register
