@@ -19,34 +19,31 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     @InjectRepository(User) private userRepository: Repository<User>,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async signIn(
     username: string,
     pass: string,
-    response: Response
-  ): Promise<{message:string}> {
-    
+    response: Response,
+  ): Promise<string> {
     const user = await this.usersService.findOne(username);
-    if (!user|| !(await bcrypt.compare(pass, user.password))) {
+    if (!user || !(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException('Invalid Credentials');
     }
 
     const payload = { sub: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
-    const isProduction = this.configService.get('HEROKU_DATABASE_URL') !== undefined;
+    const isProduction =
+      this.configService.get('HEROKU_DATABASE_URL') !== undefined;
     response.cookie('access_token', token, {
       httpOnly: true,
       maxAge: 60 * 60 * 1000,
-      sameSite: isProduction? "none" : "strict",
-      secure: isProduction? true : undefined
-      
+      sameSite: isProduction ? 'none' : 'strict',
+      secure: isProduction ? true : undefined,
+    });
 
-
-    })
-
-    return { message: 'Logged in succesfully' };
+    return 'Logged in succesfully';
   }
 
   async signUp(signUpDto: CreateUserDto): Promise<User> {
@@ -69,15 +66,16 @@ export class AuthService {
     return await this.userRepository.save(user);
   }
 
-  async signOut(response: Response):Promise<{message:string}>{
-    const isProduction = this.configService.get('HEROKU_DATABASE_URL') !== undefined;
+  async signOut(response: Response): Promise<string> {
+    const isProduction =
+      this.configService.get('HEROKU_DATABASE_URL') !== undefined;
 
-    response.cookie('access_token','',{
+    response.cookie('access_token', '', {
       httpOnly: true,
       maxAge: 0,
-      sameSite: isProduction? "none" : "strict",
-      secure: isProduction? true : undefined
-    })
-    return {message: "Logged out succesfully"}
+      sameSite: isProduction ? 'none' : 'strict',
+      secure: isProduction ? true : undefined,
+    });
+    return 'Logged out succesfully';
   }
 }

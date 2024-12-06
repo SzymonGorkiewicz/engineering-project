@@ -2,26 +2,22 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001
-        - http://localhost:3000                   
-      includePaths:
-        - "/statistics"
-        - "/homepage"
-        - "/auth/login"
-        - "/auth/check-auth"
+        - http://localhost:3001.*
+        - http://localhost:3000/auth/check-auth                   
       excludePaths:
-        - "/register"
-        - "/login"                                   
+        - /register
+        - /login
+        - /logout                                   
       authentication:
-        method: form                      
+        method: json                      
         parameters:                                                     
-          loginPageUrl: "http://localhost:3001/login" 
-          loginRequestUrl: "http://localhost:3000/auth/login"            
-          loginRequestBody: "username=${zapUser.credentials.username}&password=${zapUser.credentials.password}"         
+          loginPageUrl: http://localhost:3001/login 
+          loginRequestUrl: http://localhost:3000/auth/login           
+          loginRequestBody: "{"username":"{%username%}","password":"{%password%}"}"        
         verification:
           method: response                    
-          loggedInRegex: "Logged in succesfully"           
-          loggedOutRegex: "Logged out succesfully"                                
+          loggedInRegex: Logged in succesfully           
+          loggedOutRegex: Logged out succesfully                               
       sessionManagement:
         method: cookie                                    
       technology:                     
@@ -29,8 +25,8 @@ env:
       users:                        
       - name: zapUser                         
         credentials:                 
-          username: "zapuser"                  
-          password: "Hashedpassword1!"                        
+          username: zapuser                 
+          password: Hashedpassword1!                        
   parameters:
     failOnError: true                       
     failOnWarning: false             
@@ -41,7 +37,8 @@ jobs:
   - type: spiderAjax
     parameters:
       context: "ZapContext"
-      user: "zapUser"                     
+      url: http://localhost:3001
+      user: zapUser                   
       maxDuration: 10                     
       maxCrawlDepth: 7                
       numberOfBrowsers: 1                
