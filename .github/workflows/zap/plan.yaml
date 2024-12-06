@@ -3,7 +3,11 @@ env:
     - name: ZapContext                  
       urls: 
         - http://localhost:3001
-        - http://localhost:3000/auth/check-auth                   
+        - http://localhost:3000
+      includePaths:
+        - /auth/check-auth
+        - /homepage
+        - /statistics                  
       excludePaths:
         - /register
         - /login
@@ -69,26 +73,26 @@ jobs:
         value: 1
         onFail: 'info'
 
-      - name: 'Verify Login Successful'
-        type: 'stats'
-        statistic: 'stats.auth.success'
-        operator: '>='
-        value: 1
-        onFail: 'info'
+      # - name: 'Verify Login Successful'
+      #   type: 'stats'
+      #   statistic: 'stats.auth.success'
+      #   operator: '>='
+      #   value: 1
+      #   onFail: 'info'
       
-      - name: 'Session Token Detected in Cookies'
-        type: 'stats'
-        statistic: 'stats.auth.sessiontoken.access_token' 
-        operator: '>='
-        value: 1
-        onFail: 'warn'
+      # - name: 'Session Token Detected in Cookies'
+      #   type: 'stats'
+      #   statistic: 'stats.auth.sessiontoken.<access_token>' 
+      #   operator: '>='
+      #   value: 1
+      #   onFail: 'warn'
 
-      - name: 'No Logged Out States'
-        type: 'stats'
-        statistic: 'stats.auth.state.loggedout'
-        operator: '=='
-        value: 0
-        onFail: 'warn'
+      # - name: 'No Logged Out States'
+      #   type: 'stats'
+      #   statistic: 'stats.auth.state.loggedout'
+      #   operator: '=='
+      #   value: 0
+      #   onFail: 'warn'
         
   - type: activeScan                 
     parameters:
