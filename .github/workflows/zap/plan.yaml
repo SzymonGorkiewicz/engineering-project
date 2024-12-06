@@ -5,17 +5,17 @@ env:
         - http://localhost:3001
         - http://localhost:3000
       includePaths:
-        - /auth/check-auth
-        - /homepage
-        - /statistics                  
+        - "/auth/check-auth"
+        - "/homepage"
+        - "/statistics"                
       excludePaths:
-        - /register
-        - /login
-        - /logout                                   
+        - "/register"
+        - "/login"
+        - "/logout"                                  
       authentication:
         method: json                      
         parameters:                                                     
-          loginPageUrl: "http://localhost:3001/login" 
+          #loginPageUrl: "http://localhost:3001/login" 
           loginRequestUrl: "http://localhost:3000/auth/login"           
           loginRequestBody: "{\"username\":\"{%username%}\",\"password\":\"{%password%}\"}"
         verification:
@@ -73,26 +73,26 @@ jobs:
         value: 1
         onFail: 'info'
 
-      # - name: 'Verify Login Successful'
-      #   type: 'stats'
-      #   statistic: 'stats.auth.success'
-      #   operator: '>='
-      #   value: 1
-      #   onFail: 'info'
+      - name: 'Verify Login Successful'
+        type: 'stats'
+        statistic: 'stats.auth.success'
+        operator: '>='
+        value: 1
+        onFail: 'info'
       
-      # - name: 'Session Token Detected in Cookies'
-      #   type: 'stats'
-      #   statistic: 'stats.auth.sessiontoken.<access_token>' 
-      #   operator: '>='
-      #   value: 1
-      #   onFail: 'warn'
+      - name: 'Session Token Detected in Cookies'
+        type: 'stats'
+        statistic: 'stats.auth.sessiontoken.<access_token>' 
+        operator: '>='
+        value: 1
+        onFail: 'warn'
 
-      # - name: 'No Logged Out States'
-      #   type: 'stats'
-      #   statistic: 'stats.auth.state.loggedout'
-      #   operator: '=='
-      #   value: 0
-      #   onFail: 'warn'
+      - name: 'No Logged Out States'
+        type: 'stats'
+        statistic: 'stats.auth.state.loggedout'
+        operator: '=='
+        value: 0
+        onFail: 'warn'
         
   - type: activeScan                 
     parameters:
