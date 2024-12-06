@@ -10,11 +10,11 @@ env:
         - "/register"
         - "/login"                                   
       authentication:
-        method: json                      
+        method: form                      
         parameters:                                                     
+          loginPageUrl: "http://localhost:3001/login" 
           loginRequestUrl: "http://localhost:3000/auth/login"            
-          loginRequestBody: '{"username":"${username}", "password":"${password}"}'
-          loginPageUrl: "http://localhost:3001/login"          
+          loginRequestBody: "username=${username}&password=${password}"         
         verification:
           method: response                    
           loggedInRegex: '"message":\\s*"Logged in succesfully"'            
