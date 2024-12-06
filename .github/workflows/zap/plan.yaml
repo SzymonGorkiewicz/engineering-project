@@ -2,10 +2,13 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001                   
+        - http://localhost:3001
+        - http://localhost:3000                   
       includePaths:
         - "/statistics"
         - "/homepage"
+        - "/auth/login"
+        - "/auth/check-auth"
       excludePaths:
         - "/register"
         - "/login"                                   
@@ -27,10 +30,7 @@ env:
       - name: zapUser                         
         credentials:                 
           username: "zapuser"                  
-          password: "Hashedpassword1!"                   
-  vars:                             
-    username: "zapuser"      
-    password: "Hashedpassword1!"     
+          password: "Hashedpassword1!"                        
   parameters:
     failOnError: true                       
     failOnWarning: false             
@@ -40,7 +40,8 @@ env:
 jobs:
   - type: spiderAjax
     parameters:
-      context: "ZapContext"                     
+      context: "ZapContext"
+      user: "zapUser"                     
       maxDuration: 10                     
       maxCrawlDepth: 7                
       numberOfBrowsers: 1                
