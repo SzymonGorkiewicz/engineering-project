@@ -30,7 +30,7 @@ env:
       - name: zapUser                         
         credentials:                 
           username: zapuser                 
-          password: Hashedpassword1!                        
+          password: Hashedpassword1!                       
   parameters:
     failOnError: true                       
     failOnWarning: false             
