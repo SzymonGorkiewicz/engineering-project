@@ -2,11 +2,13 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        - http://localhost:3001/homepage                    
+        - http://localhost:3001                   
       includePaths:
         - "/statistics"
+        - "/homepage"
       excludePaths:
-        - "/register"                                   
+        - "/register"
+        - "/login"                                   
       authentication:
         method: json                      
         parameters:                                                     
@@ -68,6 +70,14 @@ jobs:
         operator: '>='
         value: 1
         onFail: 'info'
+
+      - name: 'Verify Login Successful'
+        type: 'regex'
+        regex: '"message":\\s*"Logged in succesfully"'
+        source: 'response'
+        failMessage: 'Login verification failed!'
+        onFail: 'error'
+        
   - type: activeScan                 
     parameters:
       policy: "Default Policy"                                        
