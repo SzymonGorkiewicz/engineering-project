@@ -11,9 +11,13 @@ env:
       authentication:
         method: json                      
         parameters:                                                     
-          loginPageUrl: http://localhost:3001/login 
-          loginRequestUrl: http://localhost:3000/auth/login           
-          loginRequestBody: "{"username":"{%username%}","password":"{%password%}"}"        
+          loginPageUrl: "http://localhost:3001/login" 
+          loginRequestUrl: "http://localhost:3000/auth/login"           
+          loginRequestBody: | 
+          {
+          "username":"{%username%}",
+          "password":"{%password%}"
+          }       
         verification:
           method: response                    
           loggedInRegex: Logged in succesfully           
