@@ -117,11 +117,11 @@ jobs:
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "\dt"
         
-      # - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
-      #   env:
-      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-      #   run: |
-      #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
+      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
 
       - name: ZAP Scan
         uses: zaproxy/action-af@v0.1.0
