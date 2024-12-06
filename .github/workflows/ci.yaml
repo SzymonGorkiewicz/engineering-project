@@ -34,7 +34,11 @@ jobs:
 
       - name: Install dependencies 
         run: pnpm install
-        
+      
+      - name: Install bcrypt
+        run: |
+          pnpm add bcrypt
+
       # - name: Run linter (Frontend)
       #   working-directory: ./apps/frontend
       #   run: pnpm run lint
