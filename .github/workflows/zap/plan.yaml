@@ -2,16 +2,16 @@ env:
   contexts:                           
     - name: ZapContext                  
       urls: 
-        #- http://localhost:3001
+        - http://localhost:3001
+        - "http://localhost:3001"
+      includePaths:
+        - "http://localhost:3000/auth/check-auth"
         - "http://localhost:3001/homepage"
-      # includePaths:
-      #   - "http://localhost:3000/auth/check-auth"
-      #   - "http://localhost:3001/homepage"
-      #   - "http://localhost:3001/statistics"                
-      # excludePaths:
-      #   - "http://localhost:3001/register"
-      #   - "http://localhost:3001/login"
-      #   - "http://localhost:3000/logout"                                  
+        - "http://localhost:3001/statistics"                
+      excludePaths:
+        - "http://localhost:3001/register"
+        - "http://localhost:3001/login"
+        - "http://localhost:3000/logout"                                  
       authentication:
         method: json                      
         parameters:                                                     
