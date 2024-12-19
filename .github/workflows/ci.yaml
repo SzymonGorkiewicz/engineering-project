@@ -47,27 +47,27 @@ jobs:
       #   working-directory: ./apps/backend
       #   run: pnpm run lint
         
-      # - name: Run OWASP dependency check
-      #   if: steps.owasp-cache.outputs.cache-hit != 'true'
-      #   env:
-      #     NVD_KEY: ${{ secrets.NVD_KEY }}
-      #   run: |
-      #     wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
-      #     unzip dependency-check-10.0.2-release.zip
-      #     ./dependency-check/bin/dependency-check.sh \
-      #     --project "engineering-project" \
-      #     --scan ./pnpm-lock.yaml \
-      #     --scan ./apps/frontend/package.json \
-      #     --scan ./apps/backend/package.json \
-      #     --out ./dependency-check-reports \
-      #     --format HTML \
-      #     --nvdApiKey $NVD_KEY
+      - name: Run OWASP dependency check
+        if: steps.owasp-cache.outputs.cache-hit != 'true'
+        env:
+          NVD_KEY: ${{ secrets.NVD_KEY }}
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.2/dependency-check-10.0.2-release.zip
+          unzip dependency-check-10.0.2-release.zip
+          ./dependency-check/bin/dependency-check.sh \
+          --project "engineering-project" \
+          --scan ./pnpm-lock.yaml \
+          --scan ./apps/frontend/package.json \
+          --scan ./apps/backend/package.json \
+          --out ./dependency-check-reports \
+          --format HTML \
+          --nvdApiKey $NVD_KEY
           
-      # - name: Upload Dependency Check Report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: dependency-check-report
-      #     path: dependency-check-reports  
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-reports  
 
       # - name: Run TypeScript check (Frontend)
       #   working-directory: ./apps/frontend
@@ -77,40 +77,40 @@ jobs:
       #   working-directory: ./apps/backend
       #   run: pnpm exec tsc --noEmit
 
-      - name: Create .env file for NestJS
-        working-directory: ./apps/backend
-        run: |
-          echo "POSTGRES_HOST=localhost" >> .env
-          echo "POSTGRES_PORT=5432" >> .env
-          echo "POSTGRES_USER=postgres" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "POSTGRES_DB=engineering_project" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          echo "FRONTEND_URL=http://localhost:3001" >> .env
-          echo "API_KEY=${{ secrets.HEROKU_FOOD_API_KEY }}" >> .env
-          echo "FOOD_API_URL: ${{ secrets.HEROKU_FOOD_API_URL }}" >> .env
+      # - name: Create .env file for NestJS
+      #   working-directory: ./apps/backend
+      #   run: |
+      #     echo "POSTGRES_HOST=localhost" >> .env
+      #     echo "POSTGRES_PORT=5432" >> .env
+      #     echo "POSTGRES_USER=postgres" >> .env
+      #     echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "POSTGRES_DB=engineering_project" >> .env
+      #     echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+      #     echo "FRONTEND_URL=http://localhost:3001" >> .env
+      #     echo "API_KEY=${{ secrets.HEROKU_FOOD_API_KEY }}" >> .env
+      #     echo "FOOD_API_URL: ${{ secrets.HEROKU_FOOD_API_URL }}" >> .env
       
-      - name: Create .env file for Nextjs
-        working-directory: ./apps/frontend
-        run: |
-          echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
+      # - name: Create .env file for Nextjs
+      #   working-directory: ./apps/frontend
+      #   run: |
+      #     echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/" >> .env.local
 
-      - name: Build Next.js app
-        working-directory: ./apps/frontend
-        run: pnpm run build
+      # - name: Build Next.js app
+      #   working-directory: ./apps/frontend
+      #   run: pnpm run build
 
-      - name: Build NestJS app
-        working-directory: ./apps/backend
-        run: pnpm run build
+      # - name: Build NestJS app
+      #   working-directory: ./apps/backend
+      #   run: pnpm run build
           
-      - name: Start NestJS Application
-        working-directory: ./apps/backend
-        run: pnpm run start:prod &  
+      # - name: Start NestJS Application
+      #   working-directory: ./apps/backend
+      #   run: pnpm run start:prod &  
 
-      - name: Start Next.js Application
-        working-directory: ./apps/frontend
-        run: |
-          pnpm run start &
+      # - name: Start Next.js Application
+      #   working-directory: ./apps/frontend
+      #   run: |
+      #     pnpm run start &
 
       # - name: Wait for applications to be ready
       #   run: sleep 30  
@@ -127,52 +127,52 @@ jobs:
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
 
-      - name: Hash password and save to file
-        run: |
-          echo "const bcrypt = require('bcrypt');" > hash.js
-          echo "const fs = require('fs');" >> hash.js
-          echo "bcrypt.hash('Hashedpassword1!', 10, (err, hash) => {" >> hash.js
-          echo "  if (err) { console.error(err); process.exit(1); }" >> hash.js
-          echo "  fs.writeFileSync('hashed_password.txt', hash);" >> hash.js
-          echo "});" >> hash.js
-          node hash.js
-          echo "Password hashed and saved to hashed_password.txt"
+      # - name: Hash password and save to file
+      #   run: |
+      #     echo "const bcrypt = require('bcrypt');" > hash.js
+      #     echo "const fs = require('fs');" >> hash.js
+      #     echo "bcrypt.hash('Hashedpassword1!', 10, (err, hash) => {" >> hash.js
+      #     echo "  if (err) { console.error(err); process.exit(1); }" >> hash.js
+      #     echo "  fs.writeFileSync('hashed_password.txt', hash);" >> hash.js
+      #     echo "});" >> hash.js
+      #     node hash.js
+      #     echo "Password hashed and saved to hashed_password.txt"
 
-      - name: Show hashed password (debugging only, remove in production)
-        run: cat hashed_password.txt
+      # - name: Show hashed password (debugging only, remove in production)
+      #   run: cat hashed_password.txt
 
-      - name: Insert hashed password into database
-        env:
-          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          HASH=$(cat hashed_password.txt)
-          psql -h localhost -U postgres -d engineering_project -c \
-          "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$HASH', 'zap@example.com');"
+      # - name: Insert hashed password into database
+      #   env:
+      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      #   run: |
+      #     HASH=$(cat hashed_password.txt)
+      #     psql -h localhost -U postgres -d engineering_project -c \
+      #     "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$HASH', 'zap@example.com');"
 
 
-      - name: Send POST request to login endpoint
-        run: |
-          curl -X POST http://localhost:3000/auth/login \
-            -H "Content-Type: application/json" \
-            -d '{"username": "zapuser", "password": "Hashedpassword1!"}' \
-            -v
+      # - name: Send POST request to login endpoint
+      #   run: |
+      #     curl -X POST http://localhost:3000/auth/login \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"username": "zapuser", "password": "Hashedpassword1!"}' \
+      #       -v
 
-      - name: ZAP Scan
-        uses: zaproxy/action-af@v0.1.0
-        with:
-          plan: '.github/workflows/zap/plan.yaml'
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-af@v0.1.0
+      #   with:
+      #     plan: '.github/workflows/zap/plan.yaml'
 
-      - name: Prepare raport
-        run: |
-          mkdir zap_raport
-          cp -r ZAP_DAST_SCAN zap_raport/
-          cp ZAP_DAST_SCAN.html zap_raport/
+      # - name: Prepare raport
+      #   run: |
+      #     mkdir zap_raport
+      #     cp -r ZAP_DAST_SCAN zap_raport/
+      #     cp ZAP_DAST_SCAN.html zap_raport/
 
-      - name: Upload Zap raport
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-raport
-          path: zap_raport
+      # - name: Upload Zap raport
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: zap-raport
+      #     path: zap_raport
       
 
 
