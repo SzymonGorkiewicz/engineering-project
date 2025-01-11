@@ -177,7 +177,7 @@ jobs:
   #         HD_FOOD_API_URL: ${{ secrets.HEROKU_FOOD_API_URL }}
   
   deploy-frontend:
-    needs: deploy-backend
+    #needs: deploy-backend
     runs-on: ubuntu-latest
 
     steps:
@@ -194,7 +194,7 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           ORG_ID: ${{ secrets.VERCEL_ORGID }}
-          PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+          PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
         working-directory: ./apps/frontend
         run: |
           pnpm vercel env add NEXT_PUBLIC_BACKEND_URL ${{ secrets.HEROKU_BACKEND_URL }} --token=$VERCEL_TOKEN --project-id=$PROJECT_ID
@@ -203,7 +203,7 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           ORG_ID: ${{ secrets.VERCEL_ORGID }}
-          PROJECT_ID: ${{ secrets.VERCEL.PROJECTID }}
+          PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
         working-directory: ./apps/frontend
         run: |
           pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
