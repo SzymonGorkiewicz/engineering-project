@@ -206,7 +206,7 @@ jobs:
           PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
         working-directory: ./apps/frontend
         run: |
-          pnpm vercel link --token=$VERCEL_TOKEN
+          pnpm vercel link --token=$VERCEL_TOKEN --yes
           pnpm vercel env pull --token=$VERCEL_TOKEN
           pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
       
