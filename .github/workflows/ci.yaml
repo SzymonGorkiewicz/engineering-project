@@ -190,14 +190,14 @@ jobs:
       - name: Install dependencies 
         run: pnpm install
 
-      - name: Add environment variable to Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          ORG_ID: ${{ secrets.VERCEL_ORGID }}
-          PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
-        working-directory: ./apps/frontend
-        run: |
-          pnpm vercel env pull
+      # - name: Add environment variable to Vercel
+      #   env:
+      #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      #     ORG_ID: ${{ secrets.VERCEL_ORGID }}
+      #     PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
+      #   working-directory: ./apps/frontend
+      #   run: |
+      #     pnpm vercel env pull
     
       - name: Deploy frontend to vercel
         env:
@@ -206,7 +206,7 @@ jobs:
           PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
         working-directory: ./apps/frontend
         run: |
-          pnpm vercel env pull
+          pnpm vercel env pull --token=$VERCEL_TOKEN
           pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
       
 
