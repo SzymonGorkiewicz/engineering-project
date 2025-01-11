@@ -197,7 +197,7 @@ jobs:
           PROJECT_ID: ${{ secrets.VERCEL_PROJECTID }}
         working-directory: ./apps/frontend
         run: |
-          pnpm vercel env add NEXT_PUBLIC_BACKEND_URL ${{ secrets.HEROKU_BACKEND_URL }} --token=$VERCEL_TOKEN --project-id=$PROJECT_ID
+          pnpm vercel env add NEXT_PUBLIC_BACKEND_URL ${{ secrets.HEROKU_BACKEND_URL }} --token=$VERCEL_TOKEN
     
       - name: Deploy frontend to vercel
         env:
