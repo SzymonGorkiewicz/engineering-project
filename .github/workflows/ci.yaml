@@ -198,7 +198,7 @@ jobs:
         working-directory: ./apps/frontend
         run: |
           pnpm vercel link --token=$VERCEL_TOKEN --yes
-          pnpm vercel env add NEXT_PUBLIC_BACKEND_URL production ${{ secrets.HEROKU_BACKEND_URL }} --token=${{ secrets.VERCEL_TOKEN }}
+          pnpm vercel env add NEXT_PUBLIC_BACKEND_URL production --value=${{ secrets.HEROKU_BACKEND_URL }} --token=${{ secrets.VERCEL_TOKEN }}
           pnpm vercel --token=$VERCEL_TOKEN --prod --yes 
       
 
