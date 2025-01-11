@@ -121,12 +121,20 @@ jobs:
       #   run: |
       #     psql -h localhost -U postgres -d engineering_project -c "\dt"
         
-      - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+      # - name: Create test user #Utworzenie testowego usera dla przyszłego zap scana aby móc go zautoryzować
+      #   env:
+      #     PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+      #   run: |
+      #     psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
+      
+      - name: Create test user # Utworzenie testowego usera dla przyszłego zap scana, aby móc go zautoryzować
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm', 'zap@example.com');"
-
+          ZAP_PASSWORD='$2a$10$QOmBTxDYzISPCRNuSfeZrOZ4ZbL.uJw6r.GCOxuho9ogi3mGE6dYm'
+          psql -h localhost -U postgres -d engineering_project -c "INSERT INTO \"user\" (name, username, password, email) VALUES ('Test User', 'zapuser', '${ZAP_PASSWORD}', 'zap@example.com');"
+        
+      
       # - name: Hash password and save to file
       #   run: |
       #     echo "const bcrypt = require('bcrypt');" > hash.js
